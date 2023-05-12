@@ -113,6 +113,52 @@ declare module "@scom/scom-mixed-chart/assets.ts" {
     };
     export default _default;
 }
+/// <amd-module name="@scom/scom-mixed-chart/data.json.ts" />
+declare module "@scom/scom-mixed-chart/data.json.ts" {
+    const _default_1: {
+        defaultBuilderData: {
+            apiEndpoint: string;
+            options: {
+                title: string;
+                description: string;
+                options: {
+                    xColumn: {
+                        key: string;
+                        type: string;
+                    };
+                    yColumns: string[];
+                    globalSeriesType: string;
+                    stacking: boolean;
+                    seriesOptions: ({
+                        key: string;
+                        title: string;
+                        type: string;
+                        yAxis: string;
+                        color?: undefined;
+                    } | {
+                        key: string;
+                        title: string;
+                        type: string;
+                        yAxis: string;
+                        color: string;
+                    })[];
+                    xAxis: {
+                        title: string;
+                        tickFormat: string;
+                    };
+                    leftYAxis: {
+                        labelFormat: string;
+                    };
+                    rightYAxis: {
+                        tickFormat: string;
+                        labelFormat: string;
+                    };
+                };
+            };
+        };
+    };
+    export default _default_1;
+}
 /// <amd-module name="@scom/scom-mixed-chart" />
 declare module "@scom/scom-mixed-chart" {
     import { Module, ControlElement, Container, IDataSchema } from '@ijstech/components';
@@ -136,9 +182,7 @@ declare module "@scom/scom-mixed-chart" {
         private lbDescription;
         private chartData;
         private apiEndpoint;
-        private _oldData;
         private _data;
-        private oldTag;
         tag: any;
         defaultEdit: boolean;
         readonly onConfirm: () => Promise<void>;

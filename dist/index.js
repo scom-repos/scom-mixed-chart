@@ -192,7 +192,94 @@ define("@scom/scom-mixed-chart/assets.ts", ["require", "exports", "@ijstech/comp
         fullPath
     };
 });
-define("@scom/scom-mixed-chart", ["require", "exports", "@ijstech/components", "@scom/scom-mixed-chart/global/index.ts", "@scom/scom-mixed-chart/index.css.ts", "@scom/scom-mixed-chart/assets.ts"], function (require, exports, components_3, index_1, index_css_1, assets_1) {
+define("@scom/scom-mixed-chart/data.json.ts", ["require", "exports"], function (require, exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    ///<amd-module name='@scom/scom-mixed-chart/data.json.ts'/> 
+    exports.default = {
+        defaultBuilderData: {
+            apiEndpoint: 'https://api.dune.com/api/v1/query/1333833/results?api_key=324WhvsCHWCji2pkgtfa0JDqDu8j0FdD',
+            options: {
+                title: 'Reserve Cumulative Value',
+                description: 'Radiant Capital Reserve Markets (Weekly % change)',
+                options: {
+                    xColumn: {
+                        key: 'time',
+                        type: 'time'
+                    },
+                    yColumns: [
+                        'cumulative_dai',
+                        'cumulative_usdc',
+                        'cumulative_usdt',
+                        'cumulative_wbtc',
+                        'cumulative_weth',
+                        'cumulative_tokens_value',
+                        'cumulative_diff'
+                    ],
+                    globalSeriesType: 'area',
+                    stacking: true,
+                    seriesOptions: [
+                        {
+                            key: 'cumulative_dai',
+                            title: 'DAI',
+                            type: 'area',
+                            yAxis: 'left'
+                        },
+                        {
+                            key: 'cumulative_usdc',
+                            title: 'USDC',
+                            type: 'area',
+                            yAxis: 'left'
+                        },
+                        {
+                            key: 'cumulative_usdt',
+                            title: 'USDT',
+                            type: 'area',
+                            yAxis: 'left'
+                        },
+                        {
+                            key: 'cumulative_wbtc',
+                            title: 'WBTC',
+                            type: 'area',
+                            yAxis: 'left'
+                        },
+                        {
+                            key: 'cumulative_weth',
+                            title: 'WETH',
+                            type: 'area',
+                            yAxis: 'left'
+                        },
+                        {
+                            key: 'cumulative_tokens_value',
+                            title: 'Total',
+                            type: 'scatter',
+                            yAxis: 'left'
+                        },
+                        {
+                            key: 'cumulative_diff',
+                            title: '% Change',
+                            type: 'line',
+                            yAxis: 'right',
+                            color: '#ff0000'
+                        }
+                    ],
+                    xAxis: {
+                        title: 'Date',
+                        tickFormat: 'MMM DD'
+                    },
+                    leftYAxis: {
+                        labelFormat: '$0[].0a'
+                    },
+                    rightYAxis: {
+                        tickFormat: '0[].0%',
+                        labelFormat: '0[].0%'
+                    }
+                }
+            }
+        }
+    };
+});
+define("@scom/scom-mixed-chart", ["require", "exports", "@ijstech/components", "@scom/scom-mixed-chart/global/index.ts", "@scom/scom-mixed-chart/index.css.ts", "@scom/scom-mixed-chart/assets.ts", "@scom/scom-mixed-chart/data.json.ts"], function (require, exports, components_3, index_1, index_css_1, assets_1, data_json_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     const Theme = components_3.Styles.Theme.ThemeVars;
@@ -201,9 +288,7 @@ define("@scom/scom-mixed-chart", ["require", "exports", "@ijstech/components", "
             super(parent, options);
             this.chartData = [];
             this.apiEndpoint = '';
-            this._oldData = { apiEndpoint: '', options: undefined };
             this._data = { apiEndpoint: '', options: undefined };
-            this.oldTag = {};
             this.tag = {};
             this.defaultEdit = true;
         }
@@ -216,7 +301,6 @@ define("@scom/scom-mixed-chart", ["require", "exports", "@ijstech/components", "
             return this._data;
         }
         async setData(data) {
-            this._oldData = this._data;
             this._data = data;
             this.updateChartData();
         }
@@ -462,18 +546,22 @@ define("@scom/scom-mixed-chart", ["require", "exports", "@ijstech/components", "
                     name: 'Settings',
                     icon: 'cog',
                     command: (builder, userInputData) => {
+                        let _oldData = { apiEndpoint: '', options: undefined };
                         return {
                             execute: async () => {
-                                if (builder === null || builder === void 0 ? void 0 : builder.setData) {
-                                    builder.setData(userInputData);
-                                }
-                                this.setData(userInputData);
+                                _oldData = Object.assign({}, this._data);
+                                if ((userInputData === null || userInputData === void 0 ? void 0 : userInputData.apiEndpoint) !== undefined)
+                                    this._data.apiEndpoint = userInputData.apiEndpoint;
+                                if ((userInputData === null || userInputData === void 0 ? void 0 : userInputData.options) !== undefined)
+                                    this._data.options = userInputData.options;
+                                if (builder === null || builder === void 0 ? void 0 : builder.setData)
+                                    builder.setData(this._data);
+                                this.setData(this._data);
                             },
                             undo: () => {
-                                if (builder === null || builder === void 0 ? void 0 : builder.setData) {
-                                    builder.setData(this._oldData);
-                                }
-                                this.setData(this._oldData);
+                                if (builder === null || builder === void 0 ? void 0 : builder.setData)
+                                    builder.setData(_oldData);
+                                this.setData(_oldData);
                             },
                             redo: () => { }
                         };
@@ -576,21 +664,25 @@ define("@scom/scom-mixed-chart", ["require", "exports", "@ijstech/components", "
                     name: 'Theme Settings',
                     icon: 'palette',
                     command: (builder, userInputData) => {
+                        let oldTag = {};
                         return {
                             execute: async () => {
                                 if (!userInputData)
                                     return;
-                                this.oldTag = JSON.parse(JSON.stringify(this.tag));
-                                this.setTag(userInputData);
+                                oldTag = JSON.parse(JSON.stringify(this.tag));
                                 if (builder)
                                     builder.setTag(userInputData);
+                                else
+                                    this.setTag(userInputData);
                             },
                             undo: () => {
                                 if (!userInputData)
                                     return;
-                                this.setTag(this.oldTag);
+                                this.tag = JSON.parse(JSON.stringify(oldTag));
                                 if (builder)
-                                    builder.setTag(this.oldTag);
+                                    builder.setTag(this.tag);
+                                else
+                                    this.setTag(this.tag);
                             },
                             redo: () => { }
                         };
@@ -609,7 +701,10 @@ define("@scom/scom-mixed-chart", ["require", "exports", "@ijstech/components", "
                         return this._getActions(this.getPropertiesSchema(), this.getThemeSchema());
                     },
                     getData: this.getData.bind(this),
-                    setData: this.setData.bind(this),
+                    setData: async (data) => {
+                        const defaultData = data_json_1.default.defaultBuilderData;
+                        await this.setData(Object.assign(Object.assign({}, defaultData), data));
+                    },
                     getTag: this.getTag.bind(this),
                     setTag: this.setTag.bind(this)
                 },
@@ -662,7 +757,7 @@ define("@scom/scom-mixed-chart", ["require", "exports", "@ijstech/components", "
             this.onUpdateBlock();
         }
         renderChart() {
-            if (!this.pnlChart && this._data.options)
+            if ((!this.pnlChart && this._data.options) || !this._data.options)
                 return;
             const { title, description, options } = this._data.options;
             this.lbTitle.caption = title;
