@@ -198,7 +198,7 @@ define("@scom/scom-mixed-chart/data.json.ts", ["require", "exports"], function (
     ///<amd-module name='@scom/scom-mixed-chart/data.json.ts'/> 
     exports.default = {
         defaultBuilderData: {
-            apiEndpoint: 'https://api.dune.com/api/v1/query/1333833/results?api_key=324WhvsCHWCji2pkgtfa0JDqDu8j0FdD',
+            apiEndpoint: "/dune/query/1333833",
             options: {
                 title: 'Reserve Cumulative Value',
                 description: 'Radiant Capital Reserve Markets (Weekly % change)',

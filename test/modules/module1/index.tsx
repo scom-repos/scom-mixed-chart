@@ -16,7 +16,7 @@ export default class Module1 extends Module {
             <i-scom-mixed-chart
                 margin={{ left: 'auto', right: 'auto' }}
                 data={{
-                    apiEndpoint: 'https://api.dune.com/api/v1/query/1333833/results?api_key=324WhvsCHWCji2pkgtfa0JDqDu8j0FdD',
+                    apiEndpoint: "/dune/query/1333833",
                     options: {
                         title: 'Reserve Cumulative Value',
                         description: 'Radiant Capital Reserve Markets (Weekly % change)',
