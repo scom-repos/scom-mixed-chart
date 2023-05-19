@@ -153,7 +153,7 @@ declare module "@scom/scom-mixed-chart" {
         private getPropertiesSchema;
         private getThemeSchema;
         private _getActions;
-        getConfigurators(): {
+        getConfigurators(): ({
             name: string;
             target: string;
             getActions: () => ({
@@ -211,7 +211,71 @@ declare module "@scom/scom-mixed-chart" {
             setData: any;
             getTag: any;
             setTag: any;
-        }[];
+            getLinkParams?: undefined;
+            setLinkParams?: undefined;
+        } | {
+            name: string;
+            target: string;
+            getActions: () => ({
+                name: string;
+                icon: string;
+                command: (builder: any, userInputData: any) => {
+                    execute: () => Promise<void>;
+                    undo: () => void;
+                    redo: () => void;
+                };
+                userInputDataSchema: IDataSchema;
+                userInputUISchema: {
+                    type: string;
+                    elements: ({
+                        type: string;
+                        scope: string;
+                        title: string;
+                        elements?: undefined;
+                    } | {
+                        type: string;
+                        scope: string;
+                        title?: undefined;
+                        elements?: undefined;
+                    } | {
+                        type: string;
+                        elements: ({
+                            type: string;
+                            scope: string;
+                            options?: undefined;
+                        } | {
+                            type: string;
+                            scope: string;
+                            options: {
+                                detail: {
+                                    type: string;
+                                };
+                            };
+                        })[];
+                        scope?: undefined;
+                        title?: undefined;
+                    })[];
+                };
+            } | {
+                name: string;
+                icon: string;
+                command: (builder: any, userInputData: any) => {
+                    execute: () => Promise<void>;
+                    undo: () => void;
+                    redo: () => void;
+                };
+                userInputDataSchema: IDataSchema;
+                userInputUISchema?: undefined;
+            })[];
+            getLinkParams: () => {
+                data: string;
+            };
+            setLinkParams: (params: any) => Promise<void>;
+            getData: any;
+            setData: any;
+            getTag: any;
+            setTag: any;
+        })[];
         private updateStyle;
         private updateTheme;
         private onUpdateBlock;
