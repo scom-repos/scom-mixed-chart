@@ -588,14 +588,6 @@ define("@scom/scom-mixed-chart", ["require", "exports", "@ijstech/components", "
                                 elements: [
                                     {
                                         type: 'Control',
-                                        scope: '#/properties/options/properties/options/properties/title',
-                                    },
-                                    {
-                                        type: 'Control',
-                                        scope: '#/properties/options/properties/options/properties/description',
-                                    },
-                                    {
-                                        type: 'Control',
                                         scope: '#/properties/options/properties/options/properties/xColumn',
                                     },
                                     {

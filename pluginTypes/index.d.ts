@@ -252,7 +252,7 @@ declare module "@scom/scom-mixed-chart" {
                 userInputUISchema?: undefined;
             })[];
             getData: any;
-            setData: any;
+            setData: (data: IMixedChartConfig) => Promise<void>;
             getTag: any;
             setTag: any;
             getLinkParams?: undefined;
