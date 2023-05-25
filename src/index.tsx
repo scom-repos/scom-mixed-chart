@@ -359,14 +359,6 @@ export default class ScomMixedChart extends Module {
               elements: [
                 {
                   type: 'Control',
-                  scope: '#/properties/options/properties/options/properties/title',
-                },
-                {
-                  type: 'Control',
-                  scope: '#/properties/options/properties/options/properties/description',
-                },
-                {
-                  type: 'Control',
                   scope: '#/properties/options/properties/options/properties/xColumn',
                 },
                 {
