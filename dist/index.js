@@ -692,7 +692,7 @@ define("@scom/scom-mixed-chart", ["require", "exports", "@ijstech/components", "
             if (advancedSchema) {
                 const advanced = {
                     name: 'Advanced',
-                    icon: 'cog',
+                    icon: 'sliders-h',
                     command: (builder, userInputData) => {
                         let _oldData = { globalSeriesType: 'line', seriesOptions: [] };
                         return {
