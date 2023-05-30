@@ -199,81 +199,79 @@ define("@scom/scom-mixed-chart/data.json.ts", ["require", "exports"], function (
     exports.default = {
         defaultBuilderData: {
             apiEndpoint: "/dune/query/1333833",
+            title: 'Reserve Cumulative Value',
+            description: 'Radiant Capital Reserve Markets (Weekly % change)',
             options: {
-                title: 'Reserve Cumulative Value',
-                description: 'Radiant Capital Reserve Markets (Weekly % change)',
-                options: {
-                    xColumn: {
-                        key: 'time',
-                        type: 'time'
+                xColumn: {
+                    key: 'time',
+                    type: 'time'
+                },
+                yColumns: [
+                    'cumulative_dai',
+                    'cumulative_usdc',
+                    'cumulative_usdt',
+                    'cumulative_wbtc',
+                    'cumulative_weth',
+                    'cumulative_tokens_value',
+                    'cumulative_diff'
+                ],
+                globalSeriesType: 'area',
+                stacking: true,
+                seriesOptions: [
+                    {
+                        key: 'cumulative_dai',
+                        title: 'DAI',
+                        type: 'area',
+                        yAxis: 'left'
                     },
-                    yColumns: [
-                        'cumulative_dai',
-                        'cumulative_usdc',
-                        'cumulative_usdt',
-                        'cumulative_wbtc',
-                        'cumulative_weth',
-                        'cumulative_tokens_value',
-                        'cumulative_diff'
-                    ],
-                    globalSeriesType: 'area',
-                    stacking: true,
-                    seriesOptions: [
-                        {
-                            key: 'cumulative_dai',
-                            title: 'DAI',
-                            type: 'area',
-                            yAxis: 'left'
-                        },
-                        {
-                            key: 'cumulative_usdc',
-                            title: 'USDC',
-                            type: 'area',
-                            yAxis: 'left'
-                        },
-                        {
-                            key: 'cumulative_usdt',
-                            title: 'USDT',
-                            type: 'area',
-                            yAxis: 'left'
-                        },
-                        {
-                            key: 'cumulative_wbtc',
-                            title: 'WBTC',
-                            type: 'area',
-                            yAxis: 'left'
-                        },
-                        {
-                            key: 'cumulative_weth',
-                            title: 'WETH',
-                            type: 'area',
-                            yAxis: 'left'
-                        },
-                        {
-                            key: 'cumulative_tokens_value',
-                            title: 'Total',
-                            type: 'scatter',
-                            yAxis: 'left'
-                        },
-                        {
-                            key: 'cumulative_diff',
-                            title: '% Change',
-                            type: 'line',
-                            yAxis: 'right',
-                            color: '#ff0000'
-                        }
-                    ],
-                    xAxis: {
-                        title: 'Date',
-                        tickFormat: 'MMM DD'
+                    {
+                        key: 'cumulative_usdc',
+                        title: 'USDC',
+                        type: 'area',
+                        yAxis: 'left'
                     },
-                    leftYAxis: {
-                        labelFormat: '$0[].0a'
+                    {
+                        key: 'cumulative_usdt',
+                        title: 'USDT',
+                        type: 'area',
+                        yAxis: 'left'
                     },
-                    rightYAxis: {
-                        tickFormat: '0[].0%',
-                        labelFormat: '0[].0%'
+                    {
+                        key: 'cumulative_wbtc',
+                        title: 'WBTC',
+                        type: 'area',
+                        yAxis: 'left'
+                    },
+                    {
+                        key: 'cumulative_weth',
+                        title: 'WETH',
+                        type: 'area',
+                        yAxis: 'left'
+                    },
+                    {
+                        key: 'cumulative_tokens_value',
+                        title: 'Total',
+                        type: 'scatter',
+                        yAxis: 'left'
+                    },
+                    {
+                        key: 'cumulative_diff',
+                        title: '% Change',
+                        type: 'line',
+                        yAxis: 'right',
+                        color: '#ff0000'
                     }
+                ],
+                xAxis: {
+                    title: 'Date',
+                    tickFormat: 'MMM DD'
+                },
+                leftYAxis: {
+                    labelFormat: '$0[].0a'
+                },
+                rightYAxis: {
+                    tickFormat: '0[].0%',
+                    labelFormat: '0[].0%'
                 }
             }
         }
@@ -283,12 +281,166 @@ define("@scom/scom-mixed-chart", ["require", "exports", "@ijstech/components", "
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     const Theme = components_3.Styles.Theme.ThemeVars;
+    const options = {
+        type: 'object',
+        properties: {
+            xColumn: {
+                type: 'object',
+                title: 'X column',
+                required: true,
+                properties: {
+                    key: {
+                        type: 'string',
+                        required: true
+                    },
+                    type: {
+                        type: 'string',
+                        enum: ['time', 'category'],
+                        required: true
+                    }
+                }
+            },
+            yColumns: {
+                type: 'array',
+                title: 'Y columns',
+                required: true,
+                items: {
+                    type: 'string'
+                }
+            },
+            groupBy: {
+                type: 'string'
+            },
+            globalSeriesType: {
+                type: 'string',
+                enum: [
+                    'bar',
+                    'line',
+                    'area',
+                    'scatter'
+                ],
+                required: true
+            },
+            smooth: {
+                type: 'boolean'
+            },
+            stacking: {
+                type: 'boolean'
+            },
+            legend: {
+                type: 'object',
+                properties: {
+                    show: {
+                        type: 'boolean'
+                    },
+                    scroll: {
+                        type: 'boolean'
+                    },
+                    position: {
+                        type: 'string',
+                        enum: ['top', 'bottom', 'left', 'right']
+                    }
+                }
+            },
+            showSymbol: {
+                type: 'boolean'
+            },
+            showDataLabels: {
+                type: 'boolean'
+            },
+            percentage: {
+                type: 'boolean'
+            },
+            xAxis: {
+                type: 'object',
+                properties: {
+                    title: {
+                        type: 'string'
+                    },
+                    tickFormat: {
+                        type: 'string'
+                    },
+                    reverseValues: {
+                        type: 'boolean'
+                    }
+                }
+            },
+            leftYAxis: {
+                type: 'object',
+                properties: {
+                    title: {
+                        type: 'string'
+                    },
+                    tickFormat: {
+                        type: 'string'
+                    },
+                    labelFormat: {
+                        type: 'string'
+                    }
+                }
+            },
+            rightYAxis: {
+                type: 'object',
+                properties: {
+                    title: {
+                        type: 'string'
+                    },
+                    tickFormat: {
+                        type: 'string'
+                    },
+                    labelFormat: {
+                        type: 'string'
+                    }
+                }
+            },
+            seriesOptions: {
+                type: 'array',
+                items: {
+                    type: 'object',
+                    properties: {
+                        key: {
+                            type: 'string',
+                            required: true
+                        },
+                        title: {
+                            type: 'string'
+                        },
+                        type: {
+                            type: 'string',
+                            enum: [
+                                'bar',
+                                'line',
+                                'area',
+                                'scatter'
+                            ],
+                            required: true
+                        },
+                        yAxis: {
+                            type: 'string',
+                            enum: [
+                                'left',
+                                'right'
+                            ],
+                            required: true
+                        },
+                        zIndex: {
+                            type: 'number'
+                        },
+                        color: {
+                            type: 'string',
+                            format: 'color'
+                        }
+                    }
+                }
+            }
+        }
+    };
     let ScomMixedChart = class ScomMixedChart extends components_3.Module {
         constructor(parent, options) {
             super(parent, options);
             this.chartData = [];
             this.apiEndpoint = '';
-            this._data = { apiEndpoint: '', options: undefined };
+            this._data = { apiEndpoint: '', title: '', options: undefined };
             this.tag = {};
             this.defaultEdit = true;
         }
@@ -318,25 +470,7 @@ define("@scom/scom-mixed-chart", ["require", "exports", "@ijstech/components", "
             this.height = this.tag.height || 500;
             this.onUpdateBlock();
         }
-        // getConfigSchema() {
-        //   return this.getThemeSchema();
-        // }
-        // onConfigSave(config: any) {
-        //   this.tag = config;
-        //   this.onUpdateBlock();
-        // }
-        // async edit() {
-        //   // this.chartContainer.visible = false
-        // }
-        // async confirm() {
-        //   this.onUpdateBlock();
-        //   // this.chartContainer.visible = true
-        // }
-        // async discard() {
-        //   // this.chartContainer.visible = true
-        // }
-        // async config() { }
-        getPropertiesSchema(readOnly) {
+        getPropertiesSchema() {
             const propertiesSchema = {
                 type: 'object',
                 properties: {
@@ -345,177 +479,46 @@ define("@scom/scom-mixed-chart", ["require", "exports", "@ijstech/components", "
                         title: 'API Endpoint',
                         required: true
                     },
-                    options: {
-                        type: 'object',
-                        properties: {
-                            title: {
-                                type: 'string',
-                                required: true
-                            },
-                            description: {
-                                type: 'string'
-                            },
-                            options: {
-                                type: 'object',
-                                properties: {
-                                    xColumn: {
-                                        type: 'object',
-                                        title: 'X column',
-                                        required: true,
-                                        properties: {
-                                            key: {
-                                                type: 'string',
-                                                required: true
-                                            },
-                                            type: {
-                                                type: 'string',
-                                                enum: ['time', 'category'],
-                                                required: true
-                                            }
-                                        }
-                                    },
-                                    yColumns: {
-                                        type: 'array',
-                                        title: 'Y columns',
-                                        required: true,
-                                        items: {
-                                            type: 'string'
-                                        }
-                                    },
-                                    groupBy: {
-                                        type: 'string'
-                                    },
-                                    globalSeriesType: {
-                                        type: 'string',
-                                        enum: [
-                                            'bar',
-                                            'line',
-                                            'area',
-                                            'scatter'
-                                        ],
-                                        required: true
-                                    },
-                                    smooth: {
-                                        type: 'boolean'
-                                    },
-                                    stacking: {
-                                        type: 'boolean'
-                                    },
-                                    legend: {
-                                        type: 'object',
-                                        properties: {
-                                            show: {
-                                                type: 'boolean'
-                                            },
-                                            scroll: {
-                                                type: 'boolean'
-                                            },
-                                            position: {
-                                                type: 'string',
-                                                enum: ['top', 'bottom', 'left', 'right']
-                                            }
-                                        }
-                                    },
-                                    showSymbol: {
-                                        type: 'boolean'
-                                    },
-                                    showDataLabels: {
-                                        type: 'boolean'
-                                    },
-                                    percentage: {
-                                        type: 'boolean'
-                                    },
-                                    xAxis: {
-                                        type: 'object',
-                                        properties: {
-                                            title: {
-                                                type: 'string'
-                                            },
-                                            tickFormat: {
-                                                type: 'string'
-                                            },
-                                            reverseValues: {
-                                                type: 'boolean'
-                                            }
-                                        }
-                                    },
-                                    leftYAxis: {
-                                        type: 'object',
-                                        properties: {
-                                            title: {
-                                                type: 'string'
-                                            },
-                                            tickFormat: {
-                                                type: 'string'
-                                            },
-                                            labelFormat: {
-                                                type: 'string'
-                                            }
-                                        }
-                                    },
-                                    rightYAxis: {
-                                        type: 'object',
-                                        properties: {
-                                            title: {
-                                                type: 'string'
-                                            },
-                                            tickFormat: {
-                                                type: 'string'
-                                            },
-                                            labelFormat: {
-                                                type: 'string'
-                                            }
-                                        }
-                                    },
-                                    seriesOptions: {
-                                        type: 'array',
-                                        items: {
-                                            type: 'object',
-                                            properties: {
-                                                key: {
-                                                    type: 'string',
-                                                    required: true
-                                                },
-                                                title: {
-                                                    type: 'string'
-                                                },
-                                                type: {
-                                                    type: 'string',
-                                                    enum: [
-                                                        'bar',
-                                                        'line',
-                                                        'area',
-                                                        'scatter'
-                                                    ],
-                                                    required: true
-                                                },
-                                                yAxis: {
-                                                    type: 'string',
-                                                    enum: [
-                                                        'left',
-                                                        'right'
-                                                    ],
-                                                    required: true
-                                                },
-                                                zIndex: {
-                                                    type: 'number'
-                                                },
-                                                color: {
-                                                    type: 'string',
-                                                    format: 'color'
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
+                    title: {
+                        type: 'string',
+                        required: true
+                    },
+                    description: {
+                        type: 'string'
+                    },
+                    options
+                }
+            };
+            return propertiesSchema;
+        }
+        getGeneralSchema() {
+            const propertiesSchema = {
+                type: 'object',
+                required: ['apiEndpoint', 'title'],
+                properties: {
+                    apiEndpoint: {
+                        type: 'string'
+                    },
+                    title: {
+                        type: 'string'
+                    },
+                    description: {
+                        type: 'string'
                     }
                 }
             };
             return propertiesSchema;
         }
-        getThemeSchema(readOnly) {
+        getAdvanceSchema() {
+            const propertiesSchema = {
+                type: 'object',
+                properties: {
+                    options
+                }
+            };
+            return propertiesSchema;
+        }
+        getThemeSchema() {
             const themeSchema = {
                 type: 'object',
                 properties: {
@@ -540,20 +543,24 @@ define("@scom/scom-mixed-chart", ["require", "exports", "@ijstech/components", "
             };
             return themeSchema;
         }
-        _getActions(propertiesSchema, themeSchema) {
+        _getActions(propertiesSchema, themeSchema, advancedSchema) {
             const actions = [
                 {
                     name: 'Settings',
                     icon: 'cog',
                     command: (builder, userInputData) => {
-                        let _oldData = { apiEndpoint: '', options: undefined };
+                        let _oldData = { apiEndpoint: '', title: '', options: undefined };
                         return {
                             execute: async () => {
                                 _oldData = Object.assign({}, this._data);
-                                if ((userInputData === null || userInputData === void 0 ? void 0 : userInputData.apiEndpoint) !== undefined)
-                                    this._data.apiEndpoint = userInputData.apiEndpoint;
-                                if ((userInputData === null || userInputData === void 0 ? void 0 : userInputData.options) !== undefined)
-                                    this._data.options = userInputData.options;
+                                if (userInputData) {
+                                    if (advancedSchema) {
+                                        this._data = Object.assign(Object.assign({}, this._data), userInputData);
+                                    }
+                                    else {
+                                        this._data = Object.assign({}, userInputData);
+                                    }
+                                }
                                 if (builder === null || builder === void 0 ? void 0 : builder.setData)
                                     builder.setData(this._data);
                                 this.setData(this._data);
@@ -567,7 +574,7 @@ define("@scom/scom-mixed-chart", ["require", "exports", "@ijstech/components", "
                         };
                     },
                     userInputDataSchema: propertiesSchema,
-                    userInputUISchema: {
+                    userInputUISchema: advancedSchema ? undefined : {
                         type: 'VerticalLayout',
                         elements: [
                             {
@@ -577,70 +584,70 @@ define("@scom/scom-mixed-chart", ["require", "exports", "@ijstech/components", "
                             },
                             {
                                 type: 'Control',
-                                scope: '#/properties/options/properties/title'
+                                scope: '#/properties/title'
                             },
                             {
                                 type: 'Control',
-                                scope: '#/properties/options/properties/description'
+                                scope: '#/properties/description'
                             },
                             {
                                 type: 'VerticalLayout',
                                 elements: [
                                     {
                                         type: 'Control',
-                                        scope: '#/properties/options/properties/options/properties/xColumn',
+                                        scope: '#/properties/options/properties/xColumn',
                                     },
                                     {
                                         type: 'Control',
-                                        scope: '#/properties/options/properties/options/properties/yColumns',
+                                        scope: '#/properties/options/properties/yColumns',
                                     },
                                     {
                                         type: 'Control',
-                                        scope: '#/properties/options/properties/options/properties/groupBy',
+                                        scope: '#/properties/options/properties/groupBy',
                                     },
                                     {
                                         type: 'Control',
-                                        scope: '#/properties/options/properties/options/properties/globalSeriesType',
+                                        scope: '#/properties/options/properties/globalSeriesType',
                                     },
                                     {
                                         type: 'Control',
-                                        scope: '#/properties/options/properties/options/properties/smooth',
+                                        scope: '#/properties/options/properties/smooth',
                                     },
                                     {
                                         type: 'Control',
-                                        scope: '#/properties/options/properties/options/properties/stacking',
+                                        scope: '#/properties/options/properties/stacking',
                                     },
                                     {
                                         type: 'Control',
-                                        scope: '#/properties/options/properties/options/properties/legend',
+                                        scope: '#/properties/options/properties/legend',
                                     },
                                     {
                                         type: 'Control',
-                                        scope: '#/properties/options/properties/options/properties/showSymbol',
+                                        scope: '#/properties/options/properties/showSymbol',
                                     },
                                     {
                                         type: 'Control',
-                                        scope: '#/properties/options/properties/options/properties/showDataLabels',
+                                        scope: '#/properties/options/properties/showDataLabels',
                                     },
                                     {
                                         type: 'Control',
-                                        scope: '#/properties/options/properties/options/properties/percentage',
+                                        scope: '#/properties/options/properties/percentage',
                                     },
                                     {
                                         type: 'Control',
-                                        scope: '#/properties/options/properties/options/properties/xAxis',
+                                        scope: '#/properties/options/properties/xAxis',
                                     },
                                     {
                                         type: 'Control',
-                                        scope: '#/properties/options/properties/options/properties/leftYAxis',
+                                        scope: '#/properties/options/properties/leftYAxis',
                                     },
                                     {
                                         type: 'Control',
-                                        scope: '#/properties/options/properties/options/properties/rightYAxis',
+                                        scope: '#/properties/options/properties/rightYAxis',
                                     },
                                     {
                                         type: 'Control',
-                                        scope: '#/properties/options/properties/options/properties/seriesOptions',
+                                        scope: '#/properties/options/properties/seriesOptions',
                                         options: {
                                             detail: {
                                                 type: 'VerticalLayout'
@@ -682,6 +689,101 @@ define("@scom/scom-mixed-chart", ["require", "exports", "@ijstech/components", "
                     userInputDataSchema: themeSchema
                 }
             ];
+            if (advancedSchema) {
+                const advanced = {
+                    name: 'Advanced',
+                    icon: 'cog',
+                    command: (builder, userInputData) => {
+                        let _oldData = { globalSeriesType: 'line', seriesOptions: [] };
+                        return {
+                            execute: async () => {
+                                var _a;
+                                _oldData = Object.assign({}, (_a = this._data) === null || _a === void 0 ? void 0 : _a.options);
+                                if ((userInputData === null || userInputData === void 0 ? void 0 : userInputData.options) !== undefined)
+                                    this._data.options = userInputData.options;
+                                if (builder === null || builder === void 0 ? void 0 : builder.setData)
+                                    builder.setData(this._data);
+                                this.setData(this._data);
+                            },
+                            undo: () => {
+                                this._data.options = Object.assign({}, _oldData);
+                                if (builder === null || builder === void 0 ? void 0 : builder.setData)
+                                    builder.setData(this._data);
+                                this.setData(this._data);
+                            },
+                            redo: () => { }
+                        };
+                    },
+                    userInputDataSchema: advancedSchema,
+                    userInputUISchema: {
+                        type: 'VerticalLayout',
+                        elements: [
+                            {
+                                type: 'Control',
+                                scope: '#/properties/options/properties/xColumn',
+                            },
+                            {
+                                type: 'Control',
+                                scope: '#/properties/options/properties/yColumns',
+                            },
+                            {
+                                type: 'Control',
+                                scope: '#/properties/options/properties/groupBy',
+                            },
+                            {
+                                type: 'Control',
+                                scope: '#/properties/options/properties/globalSeriesType',
+                            },
+                            {
+                                type: 'Control',
+                                scope: '#/properties/options/properties/smooth',
+                            },
+                            {
+                                type: 'Control',
+                                scope: '#/properties/options/properties/stacking',
+                            },
+                            {
+                                type: 'Control',
+                                scope: '#/properties/options/properties/legend',
+                            },
+                            {
+                                type: 'Control',
+                                scope: '#/properties/options/properties/showSymbol',
+                            },
+                            {
+                                type: 'Control',
+                                scope: '#/properties/options/properties/showDataLabels',
+                            },
+                            {
+                                type: 'Control',
+                                scope: '#/properties/options/properties/percentage',
+                            },
+                            {
+                                type: 'Control',
+                                scope: '#/properties/options/properties/xAxis',
+                            },
+                            {
+                                type: 'Control',
+                                scope: '#/properties/options/properties/leftYAxis',
+                            },
+                            {
+                                type: 'Control',
+                                scope: '#/properties/options/properties/rightYAxis',
+                            },
+                            {
+                                type: 'Control',
+                                scope: '#/properties/options/properties/seriesOptions',
+                                options: {
+                                    detail: {
+                                        type: 'VerticalLayout'
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                };
+                actions.push(advanced);
+            }
             return actions;
         }
         getConfigurators() {
@@ -691,7 +793,7 @@ define("@scom/scom-mixed-chart", ["require", "exports", "@ijstech/components", "
                     name: 'Builder Configurator',
                     target: 'Builders',
                     getActions: () => {
-                        return this._getActions(this.getPropertiesSchema(), this.getThemeSchema());
+                        return this._getActions(this.getGeneralSchema(), this.getThemeSchema(), this.getAdvanceSchema());
                     },
                     getData: this.getData.bind(this),
                     setData: async (data) => {
@@ -705,7 +807,7 @@ define("@scom/scom-mixed-chart", ["require", "exports", "@ijstech/components", "
                     name: 'Emdedder Configurator',
                     target: 'Embedders',
                     getActions: () => {
-                        return this._getActions(this.getPropertiesSchema(true), this.getThemeSchema(true));
+                        return this._getActions(this.getPropertiesSchema(), this.getThemeSchema());
                     },
                     getLinkParams: () => {
                         const data = this._data || {};
@@ -767,7 +869,7 @@ define("@scom/scom-mixed-chart", ["require", "exports", "@ijstech/components", "
         renderChart() {
             if ((!this.pnlChart && this._data.options) || !this._data.options)
                 return;
-            const { title, description, options } = this._data.options;
+            const { title, description, options } = this._data;
             this.lbTitle.caption = title;
             this.lbDescription.caption = description;
             this.lbDescription.visible = !!description;
@@ -999,6 +1101,7 @@ define("@scom/scom-mixed-chart", ["require", "exports", "@ijstech/components", "
                     },
                     axisLabel: {
                         fontSize: 10,
+                        hideOverlap: true,
                         formatter: (xAxis === null || xAxis === void 0 ? void 0 : xAxis.tickFormat) ? (value, index) => {
                             if (type === 'time') {
                                 return components_3.moment(value).format(xAxis.tickFormat);
