@@ -18,6 +18,7 @@ import { chartStyle, containerStyle } from './index.css';
 import assets from './assets';
 import configData from './data.json';
 const Theme = Styles.Theme.ThemeVars;
+const currentTheme = Styles.Theme.currentTheme;
 
 const options = {
   type: 'object',
@@ -259,7 +260,7 @@ export default class ScomMixedChart extends Module {
         options
       }
     }
-    return propertiesSchema as IDataSchema;
+    return propertiesSchema as any;
   }
 
   private getGeneralSchema() {
@@ -288,7 +289,7 @@ export default class ScomMixedChart extends Module {
         options
       }
     };
-    return propertiesSchema as IDataSchema;
+    return propertiesSchema as any;
   }
 
   private getThemeSchema() {
@@ -306,9 +307,9 @@ export default class ScomMixedChart extends Module {
           type: 'string',
           format: 'color'
         },
-        width: {
-          type: 'string'
-        },
+        // width: {
+        //   type: 'string'
+        // },
         height: {
           type: 'string'
         }
@@ -905,12 +906,15 @@ export default class ScomMixedChart extends Module {
     this.isReadyCallbackQueued = true;
     this.updateTheme();
     super.init();
+    this.setTag({
+      fontColor: currentTheme.text.primary,
+      backgroundColor: currentTheme.background.main,
+      darkShadow: false,
+      height: 500
+    })
     this.classList.add(chartStyle);
-    const { width, height, darkShadow } = this.tag || {};
-    this.width = width || 700;
-    this.height = height || 500;
     this.maxWidth = '100%';
-    this.chartContainer.style.boxShadow = darkShadow ? '0 -2px 10px rgba(0, 0, 0, 1)' : 'rgba(0, 0, 0, 0.16) 0px 1px 4px';
+    this.chartContainer.style.boxShadow = 'rgba(0, 0, 0, 0.16) 0px 1px 4px';
     const data = this.getAttribute('data', true);
     if (data) {
       this.setData(data);
