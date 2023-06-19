@@ -160,6 +160,7 @@ declare module "@scom/scom-mixed-chart" {
     import { Module, ControlElement, Container, IDataSchema } from '@ijstech/components';
     import { IMixedChartConfig } from "@scom/scom-mixed-chart/global/index.ts";
     interface ScomMixedChartElement extends ControlElement {
+        lazyLoad?: boolean;
         data: IMixedChartConfig;
     }
     global {
