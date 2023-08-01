@@ -1,5 +1,6 @@
 /// <amd-module name="@scom/scom-mixed-chart/global/interfaces.ts" />
 declare module "@scom/scom-mixed-chart/global/interfaces.ts" {
+    import { ModeType } from "@scom/scom-chart-data-source-setup";
     export interface IMixedChartOptions {
         xColumn?: {
             key: string;
@@ -47,6 +48,11 @@ declare module "@scom/scom-mixed-chart/global/interfaces.ts" {
         title: string;
         description?: string;
         options: IMixedChartOptions;
+        file?: {
+            cid: string;
+            name: string;
+        };
+        mode: ModeType;
     }
 }
 /// <amd-module name="@scom/scom-mixed-chart/global/utils.ts" />
@@ -157,7 +163,7 @@ declare module "@scom/scom-mixed-chart/data.json.ts" {
 }
 /// <amd-module name="@scom/scom-mixed-chart" />
 declare module "@scom/scom-mixed-chart" {
-    import { Module, ControlElement, Container, IDataSchema } from '@ijstech/components';
+    import { Module, ControlElement, Container, IDataSchema, VStack } from '@ijstech/components';
     import { IMixedChartConfig } from "@scom/scom-mixed-chart/global/index.ts";
     interface ScomMixedChartElement extends ControlElement {
         lazyLoad?: boolean;
@@ -207,18 +213,25 @@ declare module "@scom/scom-mixed-chart" {
                     undo: () => void;
                     redo: () => void;
                 };
+                customUI: {
+                    render: (data?: any, onConfirm?: (result: boolean, data: any) => void) => VStack;
+                };
+                userInputDataSchema?: undefined;
+                userInputUISchema?: undefined;
+            } | {
+                name: string;
+                icon: string;
+                command: (builder: any, userInputData: any) => {
+                    execute: () => Promise<void>;
+                    undo: () => void;
+                    redo: () => void;
+                };
                 userInputDataSchema: IDataSchema;
                 userInputUISchema: {
                     type: string;
                     elements: ({
                         type: string;
                         scope: string;
-                        title: string;
-                        elements?: undefined;
-                    } | {
-                        type: string;
-                        scope: string;
-                        title?: undefined;
                         elements?: undefined;
                     } | {
                         type: string;
@@ -236,9 +249,9 @@ declare module "@scom/scom-mixed-chart" {
                             };
                         })[];
                         scope?: undefined;
-                        title?: undefined;
                     })[];
                 };
+                customUI?: undefined;
             } | {
                 name: string;
                 icon: string;
@@ -248,6 +261,7 @@ declare module "@scom/scom-mixed-chart" {
                     redo: () => void;
                 };
                 userInputDataSchema: IDataSchema;
+                customUI?: undefined;
                 userInputUISchema?: undefined;
             })[];
             getData: any;
@@ -267,18 +281,25 @@ declare module "@scom/scom-mixed-chart" {
                     undo: () => void;
                     redo: () => void;
                 };
+                customUI: {
+                    render: (data?: any, onConfirm?: (result: boolean, data: any) => void) => VStack;
+                };
+                userInputDataSchema?: undefined;
+                userInputUISchema?: undefined;
+            } | {
+                name: string;
+                icon: string;
+                command: (builder: any, userInputData: any) => {
+                    execute: () => Promise<void>;
+                    undo: () => void;
+                    redo: () => void;
+                };
                 userInputDataSchema: IDataSchema;
                 userInputUISchema: {
                     type: string;
                     elements: ({
                         type: string;
                         scope: string;
-                        title: string;
-                        elements?: undefined;
-                    } | {
-                        type: string;
-                        scope: string;
-                        title?: undefined;
                         elements?: undefined;
                     } | {
                         type: string;
@@ -296,9 +317,9 @@ declare module "@scom/scom-mixed-chart" {
                             };
                         })[];
                         scope?: undefined;
-                        title?: undefined;
                     })[];
                 };
+                customUI?: undefined;
             } | {
                 name: string;
                 icon: string;
@@ -308,6 +329,7 @@ declare module "@scom/scom-mixed-chart" {
                     redo: () => void;
                 };
                 userInputDataSchema: IDataSchema;
+                customUI?: undefined;
                 userInputUISchema?: undefined;
             })[];
             getLinkParams: () => {
@@ -323,6 +345,8 @@ declare module "@scom/scom-mixed-chart" {
         private updateTheme;
         private onUpdateBlock;
         private updateChartData;
+        private renderSnapshotData;
+        private renderLiveData;
         private renderChart;
         private resizeChart;
         init(): Promise<void>;

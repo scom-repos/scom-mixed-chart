@@ -1,3 +1,5 @@
+import { ModeType } from "@scom/scom-chart-data-source-setup"
+
 export interface IMixedChartOptions {
   xColumn?: {
     key: string,
@@ -45,5 +47,10 @@ export interface IMixedChartConfig {
   apiEndpoint: string,
   title: string,
   description?: string,
-  options: IMixedChartOptions
+  options: IMixedChartOptions,
+  file?: {
+    cid: string,
+    name: string
+  },
+  mode: ModeType
 }
