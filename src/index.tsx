@@ -200,7 +200,6 @@ export default class ScomMixedChart extends Module {
   private lbTitle: Label;
   private lbDescription: Label;
   private chartData: { [key: string]: string | number }[] = [];
-  private apiEndpoint = '';
 
   private _data: IMixedChartConfig = { apiEndpoint: '', title: '', options: undefined, mode: ModeType.LIVE };
   tag: any = {};
@@ -363,15 +362,8 @@ export default class ScomMixedChart extends Module {
             vstack.append(hstack);
             button.onClick = async () => {
               const { apiEndpoint, file, mode } = config.data;
-              if (mode === 'Live') {
-                if (!apiEndpoint) return;
-                this._data.apiEndpoint = apiEndpoint;
-                this.updateChartData();
-              } else {
-                if (!file?.cid) return;
-                this.chartData = config.data.chartData ? JSON.parse(config.data.chartData) : []
-                this.onUpdateBlock();
-              }
+              if (mode === ModeType.LIVE && !apiEndpoint) return;
+              if (mode === ModeType.SNAPSHOT && !file?.cid) return;
               if (onConfirm) {
                 onConfirm(true, {...this._data, apiEndpoint, file, mode});
               }
@@ -686,29 +678,25 @@ export default class ScomMixedChart extends Module {
 
   private async renderSnapshotData() {
     if (this._data.file?.cid) {
-      const data = await fetchContentByCID(this._data.file.cid);
-      if (data) {
-        this.chartData = data;
-        this.onUpdateBlock();
-        return;
-      }
+      try {
+        const data = await fetchContentByCID(this._data.file.cid);
+        if (data) {
+          this.chartData = data;
+          this.onUpdateBlock();
+          return;
+        }
+      } catch {}
     }
     this.chartData = [];
     this.onUpdateBlock();
   }
 
   private async renderLiveData() {
-    if (this._data.apiEndpoint === this.apiEndpoint) {
-      this.onUpdateBlock();
-      return;
-    }
     const apiEndpoint = this._data.apiEndpoint;
-    this.apiEndpoint = apiEndpoint;
     if (apiEndpoint) {
-      let data = null
       try {
-        data = await callAPI(apiEndpoint);
-        if (data && this._data.apiEndpoint === apiEndpoint) {
+        const data = await callAPI(apiEndpoint);
+        if (data) {
           this.chartData = data;
           this.onUpdateBlock();
           return;
