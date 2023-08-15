@@ -1,5 +1,6 @@
 const visualizationOptions = {
     type: 'object',
+    title: 'Visualization Options',
     properties: {
         xColumn: {
             type: 'object',
@@ -264,66 +265,136 @@ export function getBuilderSchema() {
                 type: 'VerticalLayout',
                 elements: [
                     {
-                        type: 'Control',
-                        scope: '#/properties/options/properties/xColumn',
+                        type: "HorizontalLayout",
+                        elements: [
+                          {
+                            type: 'Control',
+                            scope: '#/properties/options/properties/xColumn'
+                          }
+                        ]
                     },
                     {
-                        type: 'Control',
-                        scope: '#/properties/options/properties/yColumns',
+                        type: "HorizontalLayout",
+                        elements: [
+                          {
+                            type: 'Control',
+                            scope: '#/properties/options/properties/yColumns'
+                          }
+                        ]
                     },
                     {
-                        type: 'Control',
-                        scope: '#/properties/options/properties/groupBy',
+                        type: "HorizontalLayout",
+                        elements: [
+                          {
+                            type: 'Control',
+                            scope: '#/properties/options/properties/groupBy'
+                          }
+                        ]
                     },
                     {
-                        type: 'Control',
-                        scope: '#/properties/options/properties/globalSeriesType',
+                        type: "HorizontalLayout",
+                        elements: [
+                          {
+                            type: 'Control',
+                            scope: '#/properties/options/properties/globalSeriesType'
+                          }
+                        ]
                     },
                     {
-                        type: 'Control',
-                        scope: '#/properties/options/properties/smooth',
+                        type: "HorizontalLayout",
+                        elements: [
+                          {
+                            type: 'Control',
+                            scope: '#/properties/options/properties/smooth'
+                          }
+                        ]
                     },
                     {
-                        type: 'Control',
-                        scope: '#/properties/options/properties/stacking',
+                        type: "HorizontalLayout",
+                        elements: [
+                          {
+                            type: 'Control',
+                            scope: '#/properties/options/properties/stacking'
+                          }
+                        ]
                     },
                     {
-                        type: 'Control',
-                        scope: '#/properties/options/properties/legend',
+                        type: "HorizontalLayout",
+                        elements: [
+                          {
+                            type: 'Control',
+                            scope: '#/properties/options/properties/legend'
+                          }
+                        ]
                     },
                     {
-                        type: 'Control',
-                        scope: '#/properties/options/properties/showSymbol',
+                        type: "HorizontalLayout",
+                        elements: [
+                          {
+                            type: 'Control',
+                            scope: '#/properties/options/properties/showSymbol'
+                          }
+                        ]
                     },
                     {
-                        type: 'Control',
-                        scope: '#/properties/options/properties/showDataLabels',
+                        type: "HorizontalLayout",
+                        elements: [
+                          {
+                            type: 'Control',
+                            scope: '#/properties/options/properties/showDataLabels'
+                          }
+                        ]
                     },
                     {
-                        type: 'Control',
-                        scope: '#/properties/options/properties/percentage',
+                        type: "HorizontalLayout",
+                        elements: [
+                          {
+                            type: 'Control',
+                            scope: '#/properties/options/properties/percentage'
+                          }
+                        ]
                     },
                     {
-                        type: 'Control',
-                        scope: '#/properties/options/properties/xAxis',
+                        type: "HorizontalLayout",
+                        elements: [
+                          {
+                            type: 'Control',
+                            scope: '#/properties/options/properties/xAxis'
+                          }
+                        ]
                     },
                     {
-                        type: 'Control',
-                        scope: '#/properties/options/properties/leftYAxis',
+                        type: "HorizontalLayout",
+                        elements: [
+                          {
+                            type: 'Control',
+                            scope: '#/properties/options/properties/leftYAxis'
+                          }
+                        ]
                     },
                     {
-                        type: 'Control',
-                        scope: '#/properties/options/properties/rightYAxis',
-                    },
+                        type: "HorizontalLayout",
+                        elements: [
+                          {
+                            type: 'Control',
+                            scope: '#/properties/options/properties/rightYAxis'
+                          }
+                        ]
+                    },  
                     {
-                        type: 'Control',
-                        scope: '#/properties/options/properties/seriesOptions',
-                        options: {
-                            detail: {
-                                type: 'VerticalLayout'
+                        type: "HorizontalLayout",
+                        elements: [
+                            {
+                                type: "Control",
+                                scope: '#/properties/options/properties/seriesOptions',
+                                options: {
+                                    detail: {
+                                        type: "VerticalLayout"
+                                    }
+                                }
                             }
-                        }
-                    }
+                        ]
+                    }                   
                 ]
             }
         },

@@ -297,6 +297,7 @@ define("@scom/scom-mixed-chart/formSchema.ts", ["require", "exports"], function 
     ///<amd-module name='@scom/scom-mixed-chart/formSchema.ts'/> 
     const visualizationOptions = {
         type: 'object',
+        title: 'Visualization Options',
         properties: {
             xColumn: {
                 type: 'object',
@@ -560,65 +561,135 @@ define("@scom/scom-mixed-chart/formSchema.ts", ["require", "exports"], function 
                     type: 'VerticalLayout',
                     elements: [
                         {
-                            type: 'Control',
-                            scope: '#/properties/options/properties/xColumn',
-                        },
-                        {
-                            type: 'Control',
-                            scope: '#/properties/options/properties/yColumns',
-                        },
-                        {
-                            type: 'Control',
-                            scope: '#/properties/options/properties/groupBy',
-                        },
-                        {
-                            type: 'Control',
-                            scope: '#/properties/options/properties/globalSeriesType',
-                        },
-                        {
-                            type: 'Control',
-                            scope: '#/properties/options/properties/smooth',
-                        },
-                        {
-                            type: 'Control',
-                            scope: '#/properties/options/properties/stacking',
-                        },
-                        {
-                            type: 'Control',
-                            scope: '#/properties/options/properties/legend',
-                        },
-                        {
-                            type: 'Control',
-                            scope: '#/properties/options/properties/showSymbol',
-                        },
-                        {
-                            type: 'Control',
-                            scope: '#/properties/options/properties/showDataLabels',
-                        },
-                        {
-                            type: 'Control',
-                            scope: '#/properties/options/properties/percentage',
-                        },
-                        {
-                            type: 'Control',
-                            scope: '#/properties/options/properties/xAxis',
-                        },
-                        {
-                            type: 'Control',
-                            scope: '#/properties/options/properties/leftYAxis',
-                        },
-                        {
-                            type: 'Control',
-                            scope: '#/properties/options/properties/rightYAxis',
-                        },
-                        {
-                            type: 'Control',
-                            scope: '#/properties/options/properties/seriesOptions',
-                            options: {
-                                detail: {
-                                    type: 'VerticalLayout'
+                            type: "HorizontalLayout",
+                            elements: [
+                                {
+                                    type: 'Control',
+                                    scope: '#/properties/options/properties/xColumn'
                                 }
-                            }
+                            ]
+                        },
+                        {
+                            type: "HorizontalLayout",
+                            elements: [
+                                {
+                                    type: 'Control',
+                                    scope: '#/properties/options/properties/yColumns'
+                                }
+                            ]
+                        },
+                        {
+                            type: "HorizontalLayout",
+                            elements: [
+                                {
+                                    type: 'Control',
+                                    scope: '#/properties/options/properties/groupBy'
+                                }
+                            ]
+                        },
+                        {
+                            type: "HorizontalLayout",
+                            elements: [
+                                {
+                                    type: 'Control',
+                                    scope: '#/properties/options/properties/globalSeriesType'
+                                }
+                            ]
+                        },
+                        {
+                            type: "HorizontalLayout",
+                            elements: [
+                                {
+                                    type: 'Control',
+                                    scope: '#/properties/options/properties/smooth'
+                                }
+                            ]
+                        },
+                        {
+                            type: "HorizontalLayout",
+                            elements: [
+                                {
+                                    type: 'Control',
+                                    scope: '#/properties/options/properties/stacking'
+                                }
+                            ]
+                        },
+                        {
+                            type: "HorizontalLayout",
+                            elements: [
+                                {
+                                    type: 'Control',
+                                    scope: '#/properties/options/properties/legend'
+                                }
+                            ]
+                        },
+                        {
+                            type: "HorizontalLayout",
+                            elements: [
+                                {
+                                    type: 'Control',
+                                    scope: '#/properties/options/properties/showSymbol'
+                                }
+                            ]
+                        },
+                        {
+                            type: "HorizontalLayout",
+                            elements: [
+                                {
+                                    type: 'Control',
+                                    scope: '#/properties/options/properties/showDataLabels'
+                                }
+                            ]
+                        },
+                        {
+                            type: "HorizontalLayout",
+                            elements: [
+                                {
+                                    type: 'Control',
+                                    scope: '#/properties/options/properties/percentage'
+                                }
+                            ]
+                        },
+                        {
+                            type: "HorizontalLayout",
+                            elements: [
+                                {
+                                    type: 'Control',
+                                    scope: '#/properties/options/properties/xAxis'
+                                }
+                            ]
+                        },
+                        {
+                            type: "HorizontalLayout",
+                            elements: [
+                                {
+                                    type: 'Control',
+                                    scope: '#/properties/options/properties/leftYAxis'
+                                }
+                            ]
+                        },
+                        {
+                            type: "HorizontalLayout",
+                            elements: [
+                                {
+                                    type: 'Control',
+                                    scope: '#/properties/options/properties/rightYAxis'
+                                }
+                            ]
+                        },
+                        {
+                            type: "HorizontalLayout",
+                            elements: [
+                                {
+                                    type: "Control",
+                                    scope: '#/properties/options/properties/seriesOptions',
+                                    options: {
+                                        detail: {
+                                            type: "VerticalLayout"
+                                        }
+                                    }
+                                }
+                            ]
                         }
                     ]
                 }
@@ -950,36 +1021,32 @@ define("@scom/scom-mixed-chart", ["require", "exports", "@ijstech/components", "
                     userInputDataSchema: themeSchema
                 }
             ];
-            if (advancedSchema) {
-                const advanced = {
-                    name: 'Advanced',
-                    icon: 'sliders-h',
-                    command: (builder, userInputData) => {
-                        let _oldData = { globalSeriesType: 'line', seriesOptions: [] };
-                        return {
-                            execute: async () => {
-                                var _a;
-                                _oldData = Object.assign({}, (_a = this._data) === null || _a === void 0 ? void 0 : _a.options);
-                                if ((userInputData === null || userInputData === void 0 ? void 0 : userInputData.options) !== undefined)
-                                    this._data.options = userInputData.options;
-                                if (builder === null || builder === void 0 ? void 0 : builder.setData)
-                                    builder.setData(this._data);
-                                this.setData(this._data);
-                            },
-                            undo: () => {
-                                this._data.options = Object.assign({}, _oldData);
-                                if (builder === null || builder === void 0 ? void 0 : builder.setData)
-                                    builder.setData(this._data);
-                                this.setData(this._data);
-                            },
-                            redo: () => { }
-                        };
-                    },
-                    userInputDataSchema: advancedSchema,
-                    userInputUISchema: builderSchema.advanced.uiSchema
-                };
-                actions.push(advanced);
-            }
+            // if (advancedSchema) {
+            //   const advanced = {
+            //     name: 'Advanced',
+            //     icon: 'sliders-h',
+            //     command: (builder: any, userInputData: any) => {
+            //       let _oldData: IMixedChartOptions = { globalSeriesType: 'line', seriesOptions: [] };
+            //       return {
+            //         execute: async () => {
+            //           _oldData = { ...this._data?.options };
+            //           if (userInputData?.options !== undefined) this._data.options = userInputData.options;
+            //           if (builder?.setData) builder.setData(this._data);
+            //           this.setData(this._data);
+            //         },
+            //         undo: () => {
+            //           this._data.options = { ..._oldData };
+            //           if (builder?.setData) builder.setData(this._data);
+            //           this.setData(this._data);
+            //         },
+            //         redo: () => { }
+            //       }
+            //     },
+            //     userInputDataSchema: advancedSchema,
+            //     userInputUISchema: builderSchema.advanced.uiSchema
+            //   }
+            //   actions.push(advanced);
+            // }
             return actions;
         }
         getConfigurators() {
