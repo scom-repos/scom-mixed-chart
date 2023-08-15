@@ -44,7 +44,8 @@ declare module "@scom/scom-mixed-chart/global/interfaces.ts" {
         percentage?: boolean;
     }
     export interface IMixedChartConfig {
-        apiEndpoint: string;
+        dataSource: string;
+        queryId: string;
         title: string;
         description?: string;
         options: IMixedChartOptions;
@@ -81,7 +82,7 @@ declare module "@scom/scom-mixed-chart/global/utils.ts" {
         [key: string]: any;
     }) => {};
     export const getChartType: (type: string, defaultType?: string) => string;
-    export const callAPI: (apiEndpoint: string) => Promise<any>;
+    export const callAPI: (dataSource: string, queryId: string) => Promise<any>;
 }
 /// <amd-module name="@scom/scom-mixed-chart/global/index.ts" />
 declare module "@scom/scom-mixed-chart/global/index.ts" {
@@ -121,7 +122,8 @@ declare module "@scom/scom-mixed-chart/assets.ts" {
 declare module "@scom/scom-mixed-chart/data.json.ts" {
     const _default_1: {
         defaultBuilderData: {
-            apiEndpoint: string;
+            dataSource: string;
+            queryId: string;
             title: string;
             description: string;
             options: {

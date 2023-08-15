@@ -1,6 +1,8 @@
 export default {
   defaultBuilderData: {
-    apiEndpoint: "/dune/query/1333833",
+    // apiEndpoint: "/dune/query/1333833",
+    "dataSource": "Dune",
+    "queryId": "1333833",
     title: 'Reserve Cumulative Value',
     description: 'Radiant Capital Reserve Markets (Weekly % change)',
     options: {

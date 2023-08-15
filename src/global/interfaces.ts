@@ -44,7 +44,8 @@ export interface IMixedChartOptions {
 }
 
 export interface IMixedChartConfig {
-  apiEndpoint: string,
+  dataSource: string;
+  queryId: string;
   title: string,
   description?: string,
   options: IMixedChartOptions,
