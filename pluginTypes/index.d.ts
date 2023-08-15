@@ -161,6 +161,446 @@ declare module "@scom/scom-mixed-chart/data.json.ts" {
     };
     export default _default_1;
 }
+/// <amd-module name="@scom/scom-mixed-chart/formSchema.ts" />
+declare module "@scom/scom-mixed-chart/formSchema.ts" {
+    export function getBuilderSchema(): {
+        general: {
+            dataSchema: {
+                type: string;
+                required: string[];
+                properties: {
+                    title: {
+                        type: string;
+                    };
+                    description: {
+                        type: string;
+                    };
+                };
+            };
+            uiSchema: {
+                type: string;
+                elements: ({
+                    type: string;
+                    scope: string;
+                    elements?: undefined;
+                } | {
+                    type: string;
+                    elements: ({
+                        type: string;
+                        scope: string;
+                        options?: undefined;
+                    } | {
+                        type: string;
+                        scope: string;
+                        options: {
+                            detail: {
+                                type: string;
+                            };
+                        };
+                    })[];
+                    scope?: undefined;
+                })[];
+            };
+        };
+        advanced: {
+            dataSchema: {
+                type: string;
+                properties: {
+                    options: {
+                        type: string;
+                        properties: {
+                            xColumn: {
+                                type: string;
+                                title: string;
+                                required: boolean;
+                                properties: {
+                                    key: {
+                                        type: string;
+                                        required: boolean;
+                                    };
+                                    type: {
+                                        type: string;
+                                        enum: string[];
+                                        required: boolean;
+                                    };
+                                };
+                            };
+                            yColumns: {
+                                type: string;
+                                title: string;
+                                required: boolean;
+                                items: {
+                                    type: string;
+                                };
+                            };
+                            groupBy: {
+                                type: string;
+                            };
+                            globalSeriesType: {
+                                type: string;
+                                enum: string[];
+                                required: boolean;
+                            };
+                            smooth: {
+                                type: string;
+                            };
+                            stacking: {
+                                type: string;
+                            };
+                            legend: {
+                                type: string;
+                                properties: {
+                                    show: {
+                                        type: string;
+                                    };
+                                    scroll: {
+                                        type: string;
+                                    };
+                                    position: {
+                                        type: string;
+                                        enum: string[];
+                                    };
+                                };
+                            };
+                            showSymbol: {
+                                type: string;
+                            };
+                            showDataLabels: {
+                                type: string;
+                            };
+                            percentage: {
+                                type: string;
+                            };
+                            xAxis: {
+                                type: string;
+                                properties: {
+                                    title: {
+                                        type: string;
+                                    };
+                                    tickFormat: {
+                                        type: string;
+                                    };
+                                    reverseValues: {
+                                        type: string;
+                                    };
+                                };
+                            };
+                            leftYAxis: {
+                                type: string;
+                                properties: {
+                                    title: {
+                                        type: string;
+                                    };
+                                    tickFormat: {
+                                        type: string;
+                                    };
+                                    labelFormat: {
+                                        type: string;
+                                    };
+                                };
+                            };
+                            rightYAxis: {
+                                type: string;
+                                properties: {
+                                    title: {
+                                        type: string;
+                                    };
+                                    tickFormat: {
+                                        type: string;
+                                    };
+                                    labelFormat: {
+                                        type: string;
+                                    };
+                                };
+                            };
+                            seriesOptions: {
+                                type: string;
+                                items: {
+                                    type: string;
+                                    properties: {
+                                        key: {
+                                            type: string;
+                                            required: boolean;
+                                        };
+                                        title: {
+                                            type: string;
+                                        };
+                                        type: {
+                                            type: string;
+                                            enum: string[];
+                                            required: boolean;
+                                        };
+                                        yAxis: {
+                                            type: string;
+                                            enum: string[];
+                                            required: boolean;
+                                        };
+                                        zIndex: {
+                                            type: string;
+                                        };
+                                        color: {
+                                            type: string;
+                                            format: string;
+                                        };
+                                    };
+                                };
+                            };
+                        };
+                    };
+                };
+            };
+            uiSchema: {
+                type: string;
+                elements: ({
+                    type: string;
+                    scope: string;
+                    options?: undefined;
+                } | {
+                    type: string;
+                    scope: string;
+                    options: {
+                        detail: {
+                            type: string;
+                        };
+                    };
+                })[];
+            };
+        };
+        theme: {
+            dataSchema: {
+                type: string;
+                properties: {
+                    darkShadow: {
+                        type: string;
+                    };
+                    fontColor: {
+                        type: string;
+                        format: string;
+                    };
+                    backgroundColor: {
+                        type: string;
+                        format: string;
+                    };
+                    height: {
+                        type: string;
+                    };
+                };
+            };
+        };
+    };
+    export function getEmbedderSchema(): {
+        general: {
+            dataSchema: {
+                type: string;
+                properties: {
+                    title: {
+                        type: string;
+                        required: boolean;
+                    };
+                    description: {
+                        type: string;
+                    };
+                    options: {
+                        type: string;
+                        properties: {
+                            xColumn: {
+                                type: string;
+                                title: string;
+                                required: boolean;
+                                properties: {
+                                    key: {
+                                        type: string;
+                                        required: boolean;
+                                    };
+                                    type: {
+                                        type: string;
+                                        enum: string[];
+                                        required: boolean;
+                                    };
+                                };
+                            };
+                            yColumns: {
+                                type: string;
+                                title: string;
+                                required: boolean;
+                                items: {
+                                    type: string;
+                                };
+                            };
+                            groupBy: {
+                                type: string;
+                            };
+                            globalSeriesType: {
+                                type: string;
+                                enum: string[];
+                                required: boolean;
+                            };
+                            smooth: {
+                                type: string;
+                            };
+                            stacking: {
+                                type: string;
+                            };
+                            legend: {
+                                type: string;
+                                properties: {
+                                    show: {
+                                        type: string;
+                                    };
+                                    scroll: {
+                                        type: string;
+                                    };
+                                    position: {
+                                        type: string;
+                                        enum: string[];
+                                    };
+                                };
+                            };
+                            showSymbol: {
+                                type: string;
+                            };
+                            showDataLabels: {
+                                type: string;
+                            };
+                            percentage: {
+                                type: string;
+                            };
+                            xAxis: {
+                                type: string;
+                                properties: {
+                                    title: {
+                                        type: string;
+                                    };
+                                    tickFormat: {
+                                        type: string;
+                                    };
+                                    reverseValues: {
+                                        type: string;
+                                    };
+                                };
+                            };
+                            leftYAxis: {
+                                type: string;
+                                properties: {
+                                    title: {
+                                        type: string;
+                                    };
+                                    tickFormat: {
+                                        type: string;
+                                    };
+                                    labelFormat: {
+                                        type: string;
+                                    };
+                                };
+                            };
+                            rightYAxis: {
+                                type: string;
+                                properties: {
+                                    title: {
+                                        type: string;
+                                    };
+                                    tickFormat: {
+                                        type: string;
+                                    };
+                                    labelFormat: {
+                                        type: string;
+                                    };
+                                };
+                            };
+                            seriesOptions: {
+                                type: string;
+                                items: {
+                                    type: string;
+                                    properties: {
+                                        key: {
+                                            type: string;
+                                            required: boolean;
+                                        };
+                                        title: {
+                                            type: string;
+                                        };
+                                        type: {
+                                            type: string;
+                                            enum: string[];
+                                            required: boolean;
+                                        };
+                                        yAxis: {
+                                            type: string;
+                                            enum: string[];
+                                            required: boolean;
+                                        };
+                                        zIndex: {
+                                            type: string;
+                                        };
+                                        color: {
+                                            type: string;
+                                            format: string;
+                                        };
+                                    };
+                                };
+                            };
+                        };
+                    };
+                };
+            };
+        };
+        theme: {
+            dataSchema: {
+                type: string;
+                properties: {
+                    darkShadow: {
+                        type: string;
+                    };
+                    fontColor: {
+                        type: string;
+                        format: string;
+                    };
+                    backgroundColor: {
+                        type: string;
+                        format: string;
+                    };
+                    height: {
+                        type: string;
+                    };
+                };
+            };
+        };
+    };
+}
+/// <amd-module name="@scom/scom-mixed-chart/dataOptionsForm.tsx" />
+declare module "@scom/scom-mixed-chart/dataOptionsForm.tsx" {
+    import { Module, ControlElement, Container } from '@ijstech/components';
+    interface IData {
+        options: any;
+    }
+    interface ScomMixedChartDataOptionsFormElement extends ControlElement {
+        dataSchema?: string;
+        uiSchema?: string;
+        options: any;
+    }
+    global {
+        namespace JSX {
+            interface IntrinsicElements {
+                ["i-scom-mixed-chart-data-options-form"]: ScomMixedChartDataOptionsFormElement;
+            }
+        }
+    }
+    export default class ScomMixedChartDataOptionsForm extends Module {
+        private formEl;
+        private _dataSchema;
+        private _uiSchema;
+        private _data;
+        constructor(parent?: Container, options?: any);
+        get data(): IData;
+        set data(value: IData);
+        refreshFormData(): Promise<IData>;
+        private renderUI;
+        private onInputChanged;
+        onCustomInputChanged(data: IData): Promise<void>;
+        init(): Promise<void>;
+        render(): any;
+    }
+}
 /// <amd-module name="@scom/scom-mixed-chart" />
 declare module "@scom/scom-mixed-chart" {
     import { Module, ControlElement, Container, IDataSchema, VStack } from '@ijstech/components';
@@ -196,28 +636,11 @@ declare module "@scom/scom-mixed-chart" {
         private setData;
         private getTag;
         private setTag;
-        private getPropertiesSchema;
-        private getGeneralSchema;
-        private getAdvanceSchema;
-        private getThemeSchema;
         private _getActions;
         getConfigurators(): ({
             name: string;
             target: string;
             getActions: () => ({
-                name: string;
-                icon: string;
-                command: (builder: any, userInputData: any) => {
-                    execute: () => Promise<void>;
-                    undo: () => void;
-                    redo: () => void;
-                };
-                customUI: {
-                    render: (data?: any, onConfirm?: (result: boolean, data: any) => void) => VStack;
-                };
-                userInputDataSchema?: undefined;
-                userInputUISchema?: undefined;
-            } | {
                 name: string;
                 icon: string;
                 command: (builder: any, userInputData: any) => {
@@ -259,9 +682,22 @@ declare module "@scom/scom-mixed-chart" {
                     undo: () => void;
                     redo: () => void;
                 };
-                userInputDataSchema: IDataSchema;
-                customUI?: undefined;
+                customUI: {
+                    render: (data?: any, onConfirm?: (result: boolean, data: any) => void, onChange?: (result: boolean, data: any) => void) => VStack;
+                };
+                userInputDataSchema?: undefined;
                 userInputUISchema?: undefined;
+            } | {
+                name: string;
+                icon: string;
+                command: (builder: any, userInputData: any) => {
+                    execute: () => Promise<void>;
+                    undo: () => void;
+                    redo: () => void;
+                };
+                userInputDataSchema: IDataSchema;
+                userInputUISchema?: undefined;
+                customUI?: undefined;
             })[];
             getData: any;
             setData: (data: IMixedChartConfig) => Promise<void>;
@@ -280,19 +716,6 @@ declare module "@scom/scom-mixed-chart" {
                     undo: () => void;
                     redo: () => void;
                 };
-                customUI: {
-                    render: (data?: any, onConfirm?: (result: boolean, data: any) => void) => VStack;
-                };
-                userInputDataSchema?: undefined;
-                userInputUISchema?: undefined;
-            } | {
-                name: string;
-                icon: string;
-                command: (builder: any, userInputData: any) => {
-                    execute: () => Promise<void>;
-                    undo: () => void;
-                    redo: () => void;
-                };
                 userInputDataSchema: IDataSchema;
                 userInputUISchema: {
                     type: string;
@@ -327,9 +750,22 @@ declare module "@scom/scom-mixed-chart" {
                     undo: () => void;
                     redo: () => void;
                 };
-                userInputDataSchema: IDataSchema;
-                customUI?: undefined;
+                customUI: {
+                    render: (data?: any, onConfirm?: (result: boolean, data: any) => void, onChange?: (result: boolean, data: any) => void) => VStack;
+                };
+                userInputDataSchema?: undefined;
                 userInputUISchema?: undefined;
+            } | {
+                name: string;
+                icon: string;
+                command: (builder: any, userInputData: any) => {
+                    execute: () => Promise<void>;
+                    undo: () => void;
+                    redo: () => void;
+                };
+                userInputDataSchema: IDataSchema;
+                userInputUISchema?: undefined;
+                customUI?: undefined;
             })[];
             getLinkParams: () => {
                 data: string;
