@@ -45,7 +45,8 @@ declare module "@scom/scom-mixed-chart/global/interfaces.ts" {
     }
     export interface IMixedChartConfig {
         dataSource: string;
-        queryId: string;
+        queryId?: string;
+        apiEndpoint?: string;
         title: string;
         description?: string;
         options: IMixedChartOptions;
@@ -55,9 +56,15 @@ declare module "@scom/scom-mixed-chart/global/interfaces.ts" {
         };
         mode: ModeType;
     }
+    export interface IFetchDataOptions {
+        dataSource: string;
+        queryId?: string;
+        apiEndpoint?: string;
+    }
 }
 /// <amd-module name="@scom/scom-mixed-chart/global/utils.ts" />
 declare module "@scom/scom-mixed-chart/global/utils.ts" {
+    import { IFetchDataOptions } from "@scom/scom-mixed-chart/global/interfaces.ts";
     export const formatNumber: (num: number, options?: {
         format?: string;
         decimals?: number;
@@ -82,26 +89,10 @@ declare module "@scom/scom-mixed-chart/global/utils.ts" {
         [key: string]: any;
     }) => {};
     export const getChartType: (type: string, defaultType?: string) => string;
-    export const callAPI: (dataSource: string, queryId: string) => Promise<any>;
+    export const callAPI: (options: IFetchDataOptions) => Promise<any>;
 }
 /// <amd-module name="@scom/scom-mixed-chart/global/index.ts" />
 declare module "@scom/scom-mixed-chart/global/index.ts" {
-    export interface PageBlock {
-        getData: () => any;
-        setData: (data: any) => Promise<void>;
-        getTag: () => any;
-        setTag: (tag: any) => Promise<void>;
-        validate?: () => boolean;
-        defaultEdit?: boolean;
-        tag?: any;
-        readonly onEdit: () => Promise<void>;
-        readonly onConfirm: () => Promise<void>;
-        readonly onDiscard: () => Promise<void>;
-        edit: () => Promise<void>;
-        confirm: () => Promise<void>;
-        discard: () => Promise<void>;
-        config: () => Promise<void>;
-    }
     export * from "@scom/scom-mixed-chart/global/interfaces.ts";
     export * from "@scom/scom-mixed-chart/global/utils.ts";
 }

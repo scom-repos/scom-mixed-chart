@@ -45,7 +45,8 @@ export interface IMixedChartOptions {
 
 export interface IMixedChartConfig {
   dataSource: string;
-  queryId: string;
+  queryId?: string;
+  apiEndpoint?: string;
   title: string,
   description?: string,
   options: IMixedChartOptions,
@@ -54,4 +55,10 @@ export interface IMixedChartConfig {
     name: string
   },
   mode: ModeType
+}
+
+export interface IFetchDataOptions {
+  dataSource: string;
+  queryId?: string;
+  apiEndpoint?: string;
 }
