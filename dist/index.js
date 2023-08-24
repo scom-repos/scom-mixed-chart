@@ -154,14 +154,17 @@ define("@scom/scom-mixed-chart/global/utils.ts", ["require", "exports", "@scom/s
         }
     };
     exports.getChartType = getChartType;
-    const callAPI = async (dataSource, queryId) => {
-        if (!dataSource)
+    const callAPI = async (options) => {
+        if (!options.dataSource)
             return [];
         try {
             let apiEndpoint = '';
-            switch (dataSource) {
+            switch (options.dataSource) {
                 case scom_chart_data_source_setup_1.DataSource.Dune:
-                    apiEndpoint = `/dune/query/${queryId}`;
+                    apiEndpoint = `/dune/query/${options.queryId}`;
+                    break;
+                case scom_chart_data_source_setup_1.DataSource.Custom:
+                    apiEndpoint = options.apiEndpoint;
                     break;
             }
             if (!apiEndpoint)
@@ -170,9 +173,7 @@ define("@scom/scom-mixed-chart/global/utils.ts", ["require", "exports", "@scom/s
             const jsonData = await response.json();
             return jsonData.result.rows || [];
         }
-        catch (error) {
-            console.log(error);
-        }
+        catch (_a) { }
         return [];
     };
     exports.callAPI = callAPI;
@@ -180,6 +181,7 @@ define("@scom/scom-mixed-chart/global/utils.ts", ["require", "exports", "@scom/s
 define("@scom/scom-mixed-chart/global/index.ts", ["require", "exports", "@scom/scom-mixed-chart/global/interfaces.ts", "@scom/scom-mixed-chart/global/utils.ts"], function (require, exports, interfaces_1, utils_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
+    ///<amd-module name='@scom/scom-mixed-chart/global/index.ts'/> 
     __exportStar(interfaces_1, exports);
     __exportStar(utils_1, exports);
 });
@@ -857,6 +859,7 @@ define("@scom/scom-mixed-chart", ["require", "exports", "@ijstech/components", "
     const DefaultData = {
         dataSource: scom_chart_data_source_setup_2.DataSource.Dune,
         queryId: '',
+        apiEndpoint: '',
         title: '',
         options: undefined,
         mode: scom_chart_data_source_setup_2.ModeType.LIVE
@@ -945,6 +948,8 @@ define("@scom/scom-mixed-chart", ["require", "exports", "@ijstech/components", "
                                     this._data.dataSource = userInputData === null || userInputData === void 0 ? void 0 : userInputData.dataSource;
                                 if (userInputData === null || userInputData === void 0 ? void 0 : userInputData.queryId)
                                     this._data.queryId = userInputData === null || userInputData === void 0 ? void 0 : userInputData.queryId;
+                                if (userInputData === null || userInputData === void 0 ? void 0 : userInputData.apiEndpoint)
+                                    this._data.apiEndpoint = userInputData === null || userInputData === void 0 ? void 0 : userInputData.apiEndpoint;
                                 if ((userInputData === null || userInputData === void 0 ? void 0 : userInputData.options) !== undefined)
                                     this._data.options = userInputData.options;
                                 if (builder === null || builder === void 0 ? void 0 : builder.setData)
@@ -988,25 +993,18 @@ define("@scom/scom-mixed-chart", ["require", "exports", "@ijstech/components", "
                             vstack.append(hstackBtnConfirm);
                             if (onChange) {
                                 dataOptionsForm.onCustomInputChanged = async (optionsFormData) => {
-                                    const { dataSource, queryId, file, mode } = dataSourceSetup.data;
-                                    onChange(true, Object.assign(Object.assign(Object.assign({}, this._data), optionsFormData), { dataSource,
-                                        queryId,
-                                        file,
-                                        mode }));
+                                    onChange(true, Object.assign(Object.assign(Object.assign({}, this._data), optionsFormData), dataSourceSetup.data));
                                 };
                             }
                             button.onClick = async () => {
-                                const { dataSource, queryId, file, mode } = dataSourceSetup.data;
+                                const { dataSource, file, mode } = dataSourceSetup.data;
                                 if (mode === scom_chart_data_source_setup_2.ModeType.LIVE && !dataSource)
                                     return;
                                 if (mode === scom_chart_data_source_setup_2.ModeType.SNAPSHOT && !(file === null || file === void 0 ? void 0 : file.cid))
                                     return;
                                 if (onConfirm) {
                                     const optionsFormData = await dataOptionsForm.refreshFormData();
-                                    onConfirm(true, Object.assign(Object.assign(Object.assign({}, this._data), optionsFormData), { dataSource,
-                                        queryId,
-                                        file,
-                                        mode }));
+                                    onConfirm(true, Object.assign(Object.assign(Object.assign({}, this._data), optionsFormData), dataSourceSetup.data));
                                 }
                             };
                             return vstack;
@@ -1165,10 +1163,13 @@ define("@scom/scom-mixed-chart", ["require", "exports", "@ijstech/components", "
         }
         async renderLiveData() {
             const dataSource = this._data.dataSource;
-            const queryId = this._data.queryId;
-            if (dataSource && queryId) {
+            if (dataSource) {
                 try {
-                    const data = await (0, index_1.callAPI)(dataSource, queryId);
+                    const data = await (0, index_1.callAPI)({
+                        dataSource,
+                        queryId: this._data.queryId,
+                        apiEndpoint: this._data.apiEndpoint
+                    });
                     if (data) {
                         this.chartData = data;
                         this.onUpdateBlock();
