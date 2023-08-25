@@ -14,7 +14,7 @@ import {
   moment,
   Button
 } from '@ijstech/components';
-import { IMixedChartConfig, callAPI, formatNumber, groupByCategory, extractUniqueTimes, concatUnique, groupArrayByKey, formatNumberByFormat, getChartType, IMixedChartOptions } from './global/index';
+import { IMixedChartConfig, callAPI, formatNumber, groupByCategory, extractUniqueTimes, concatUnique, groupArrayByKey, formatNumberByFormat, getChartType, IMixedChartOptions, isNumeric } from './global/index';
 import { chartStyle, containerStyle } from './index.css';
 import assets from './assets';
 import configData from './data.json';
@@ -60,9 +60,6 @@ export default class ScomMixedChart extends Module {
   private _data: IMixedChartConfig = DefaultData;
   tag: any = {};
   defaultEdit: boolean = true;
-  readonly onConfirm: () => Promise<void>;
-  readonly onDiscard: () => Promise<void>;
-  readonly onEdit: () => Promise<void>;
 
   static async create(options?: ScomMixedChartElement, parent?: Container) {
     let self = new this(parent, options);
@@ -447,7 +444,7 @@ export default class ScomMixedChart extends Module {
         const _data = concatUnique(times, group[v]);
         groupData[v] = groupArrayByKey(Object.keys(_data).map(m => [type === 'time' ? new Date(m) : m, _data[m]]));
       });
-      const isPercentage = percentage && groupData[keys[0]] && typeof groupData[keys[0]][0][1] === 'number';
+      const isPercentage = percentage && groupData[keys[0]] && isNumeric(groupData[keys[0]][0][1]);
       _series = keys.map(v => {
         const seriesOpt = seriesOptions?.find(f => f.key === v);
         let _data = [];
@@ -495,7 +492,7 @@ export default class ScomMixedChart extends Module {
       let groupData: { [key: string]: any[] } = {};
       let isPercentage = percentage && arr.length > 0;
       yColumns.map(col => {
-        if (isPercentage && typeof arr[0][col] !== 'number') {
+        if (isPercentage && !isNumeric(arr[0][col])) {
           isPercentage = false;
         }
         groupData[col] = groupArrayByKey(arr.map(v => [type === 'time' ? new Date(v[key]) : col, v[col]]));
