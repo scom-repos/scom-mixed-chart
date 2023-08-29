@@ -18,6 +18,17 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+var __rest = (this && this.__rest) || function (s, e) {
+    var t = {};
+    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
+        t[p] = s[p];
+    if (s != null && typeof Object.getOwnPropertySymbols === "function")
+        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+            if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i]))
+                t[p[i]] = s[p[i]];
+        }
+    return t;
+};
 define("@scom/scom-mixed-chart/global/interfaces.ts", ["require", "exports"], function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
@@ -66,13 +77,16 @@ define("@scom/scom-mixed-chart/global/utils.ts", ["require", "exports", "@scom/s
         if (absNum < 0.001) {
             return (0, exports.formatNumberWithSeparators)(num, { precision: 4 });
         }
+        if (absNum < 1) {
+            return (0, exports.formatNumberWithSeparators)(num, { precision: 4 });
+        }
         return (0, exports.formatNumberWithSeparators)(num, { precision: 2 });
     };
     exports.formatNumber = formatNumber;
     const formatNumberByFormat = (num, format, separators) => {
         if (!format)
             return (0, exports.formatNumberWithSeparators)(num, { precision: 0 });
-        const decimalPlaces = format.split('.')[1] ? format.split('.').length : 0;
+        const decimalPlaces = format.split('.')[1] ? format.split('.')[1].length : 0;
         if (format.includes('%')) {
             return (0, exports.formatNumberWithSeparators)((num * 100), { precision: decimalPlaces }) + '%';
         }
@@ -483,92 +497,218 @@ define("@scom/scom-mixed-chart/formSchema.ts", ["require", "exports"], function 
             }
         }
     };
+    const theme = {
+        darkShadow: {
+            type: 'boolean'
+        },
+        fontColor: {
+            type: 'string',
+            format: 'color'
+        },
+        backgroundColor: {
+            type: 'string',
+            format: 'color'
+        },
+        // width: {
+        //     type: 'string'
+        // },
+        height: {
+            type: 'string'
+        }
+    };
+    const themeUISchema = {
+        type: 'Category',
+        label: 'Theme',
+        elements: [
+            {
+                type: 'VerticalLayout',
+                elements: [
+                    {
+                        type: 'Control',
+                        scope: '#/properties/darkShadow'
+                    },
+                    {
+                        type: 'Control',
+                        scope: '#/properties/fontColor'
+                    },
+                    {
+                        type: 'Control',
+                        scope: '#/properties/backgroundColor'
+                    },
+                    {
+                        type: 'Control',
+                        scope: '#/properties/height'
+                    }
+                ]
+            }
+        ]
+    };
     function getBuilderSchema() {
         return {
-            general: {
+            dataSchema: {
+                type: 'object',
+                required: ['title'],
+                properties: Object.assign({ title: {
+                        type: 'string'
+                    }, description: {
+                        type: 'string'
+                    } }, theme)
+            },
+            uiSchema: {
+                type: 'Categorization',
+                elements: [
+                    {
+                        type: 'Category',
+                        label: 'General',
+                        elements: [
+                            {
+                                type: 'VerticalLayout',
+                                elements: [
+                                    {
+                                        type: 'Control',
+                                        scope: '#/properties/title'
+                                    },
+                                    {
+                                        type: 'Control',
+                                        scope: '#/properties/description'
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    themeUISchema
+                ]
+            },
+            advanced: {
                 dataSchema: {
                     type: 'object',
-                    required: ['title'],
                     properties: {
-                        title: {
-                            type: 'string'
-                        },
-                        description: {
-                            type: 'string'
-                        }
+                        options: visualizationOptions
                     }
                 },
                 uiSchema: {
                     type: 'VerticalLayout',
                     elements: [
-                        // {
-                        //   type: 'Control',
-                        //   scope: '#/properties/apiEndpoint',
-                        //   title: 'API Endpoint'
-                        // },
                         {
-                            type: 'Control',
-                            scope: '#/properties/title'
-                        },
-                        {
-                            type: 'Control',
-                            scope: '#/properties/description'
-                        },
-                        {
-                            type: 'VerticalLayout',
+                            type: 'HorizontalLayout',
                             elements: [
                                 {
                                     type: 'Control',
-                                    scope: '#/properties/options/properties/xColumn',
-                                },
+                                    scope: '#/properties/options/properties/xColumn'
+                                }
+                            ]
+                        },
+                        {
+                            type: 'HorizontalLayout',
+                            elements: [
                                 {
                                     type: 'Control',
-                                    scope: '#/properties/options/properties/yColumns',
-                                },
+                                    scope: '#/properties/options/properties/yColumns'
+                                }
+                            ]
+                        },
+                        {
+                            type: 'HorizontalLayout',
+                            elements: [
                                 {
                                     type: 'Control',
-                                    scope: '#/properties/options/properties/groupBy',
-                                },
+                                    scope: '#/properties/options/properties/groupBy'
+                                }
+                            ]
+                        },
+                        {
+                            type: 'HorizontalLayout',
+                            elements: [
                                 {
                                     type: 'Control',
-                                    scope: '#/properties/options/properties/globalSeriesType',
-                                },
+                                    scope: '#/properties/options/properties/globalSeriesType'
+                                }
+                            ]
+                        },
+                        {
+                            type: 'HorizontalLayout',
+                            elements: [
                                 {
                                     type: 'Control',
-                                    scope: '#/properties/options/properties/smooth',
-                                },
+                                    scope: '#/properties/options/properties/smooth'
+                                }
+                            ]
+                        },
+                        {
+                            type: 'HorizontalLayout',
+                            elements: [
                                 {
                                     type: 'Control',
-                                    scope: '#/properties/options/properties/stacking',
-                                },
+                                    scope: '#/properties/options/properties/stacking'
+                                }
+                            ]
+                        },
+                        {
+                            type: 'HorizontalLayout',
+                            elements: [
                                 {
                                     type: 'Control',
-                                    scope: '#/properties/options/properties/legend',
-                                },
+                                    scope: '#/properties/options/properties/legend'
+                                }
+                            ]
+                        },
+                        {
+                            type: 'HorizontalLayout',
+                            elements: [
                                 {
                                     type: 'Control',
-                                    scope: '#/properties/options/properties/showSymbol',
-                                },
+                                    scope: '#/properties/options/properties/showSymbol'
+                                }
+                            ]
+                        },
+                        {
+                            type: 'HorizontalLayout',
+                            elements: [
                                 {
                                     type: 'Control',
-                                    scope: '#/properties/options/properties/showDataLabels',
-                                },
+                                    scope: '#/properties/options/properties/showDataLabels'
+                                }
+                            ]
+                        },
+                        {
+                            type: 'HorizontalLayout',
+                            elements: [
                                 {
                                     type: 'Control',
-                                    scope: '#/properties/options/properties/percentage',
-                                },
+                                    scope: '#/properties/options/properties/percentage'
+                                }
+                            ]
+                        },
+                        {
+                            type: 'HorizontalLayout',
+                            elements: [
                                 {
                                     type: 'Control',
-                                    scope: '#/properties/options/properties/xAxis',
-                                },
+                                    scope: '#/properties/options/properties/xAxis'
+                                }
+                            ]
+                        },
+                        {
+                            type: 'HorizontalLayout',
+                            elements: [
                                 {
                                     type: 'Control',
-                                    scope: '#/properties/options/properties/leftYAxis',
-                                },
+                                    scope: '#/properties/options/properties/leftYAxis'
+                                }
+                            ]
+                        },
+                        {
+                            type: 'HorizontalLayout',
+                            elements: [
                                 {
                                     type: 'Control',
-                                    scope: '#/properties/options/properties/rightYAxis',
-                                },
+                                    scope: '#/properties/options/properties/rightYAxis'
+                                }
+                            ]
+                        },
+                        {
+                            type: 'HorizontalLayout',
+                            elements: [
                                 {
                                     type: 'Control',
                                     scope: '#/properties/options/properties/seriesOptions',
@@ -582,223 +722,59 @@ define("@scom/scom-mixed-chart/formSchema.ts", ["require", "exports"], function 
                         }
                     ]
                 }
-            },
-            advanced: {
-                dataSchema: {
-                    type: 'object',
-                    properties: {
-                        options: visualizationOptions
-                    }
-                },
-                uiSchema: {
-                    type: 'VerticalLayout',
-                    elements: [
-                        {
-                            type: "HorizontalLayout",
-                            elements: [
-                                {
-                                    type: 'Control',
-                                    scope: '#/properties/options/properties/xColumn'
-                                }
-                            ]
-                        },
-                        {
-                            type: "HorizontalLayout",
-                            elements: [
-                                {
-                                    type: 'Control',
-                                    scope: '#/properties/options/properties/yColumns'
-                                }
-                            ]
-                        },
-                        {
-                            type: "HorizontalLayout",
-                            elements: [
-                                {
-                                    type: 'Control',
-                                    scope: '#/properties/options/properties/groupBy'
-                                }
-                            ]
-                        },
-                        {
-                            type: "HorizontalLayout",
-                            elements: [
-                                {
-                                    type: 'Control',
-                                    scope: '#/properties/options/properties/globalSeriesType'
-                                }
-                            ]
-                        },
-                        {
-                            type: "HorizontalLayout",
-                            elements: [
-                                {
-                                    type: 'Control',
-                                    scope: '#/properties/options/properties/smooth'
-                                }
-                            ]
-                        },
-                        {
-                            type: "HorizontalLayout",
-                            elements: [
-                                {
-                                    type: 'Control',
-                                    scope: '#/properties/options/properties/stacking'
-                                }
-                            ]
-                        },
-                        {
-                            type: "HorizontalLayout",
-                            elements: [
-                                {
-                                    type: 'Control',
-                                    scope: '#/properties/options/properties/legend'
-                                }
-                            ]
-                        },
-                        {
-                            type: "HorizontalLayout",
-                            elements: [
-                                {
-                                    type: 'Control',
-                                    scope: '#/properties/options/properties/showSymbol'
-                                }
-                            ]
-                        },
-                        {
-                            type: "HorizontalLayout",
-                            elements: [
-                                {
-                                    type: 'Control',
-                                    scope: '#/properties/options/properties/showDataLabels'
-                                }
-                            ]
-                        },
-                        {
-                            type: "HorizontalLayout",
-                            elements: [
-                                {
-                                    type: 'Control',
-                                    scope: '#/properties/options/properties/percentage'
-                                }
-                            ]
-                        },
-                        {
-                            type: "HorizontalLayout",
-                            elements: [
-                                {
-                                    type: 'Control',
-                                    scope: '#/properties/options/properties/xAxis'
-                                }
-                            ]
-                        },
-                        {
-                            type: "HorizontalLayout",
-                            elements: [
-                                {
-                                    type: 'Control',
-                                    scope: '#/properties/options/properties/leftYAxis'
-                                }
-                            ]
-                        },
-                        {
-                            type: "HorizontalLayout",
-                            elements: [
-                                {
-                                    type: 'Control',
-                                    scope: '#/properties/options/properties/rightYAxis'
-                                }
-                            ]
-                        },
-                        {
-                            type: "HorizontalLayout",
-                            elements: [
-                                {
-                                    type: "Control",
-                                    scope: '#/properties/options/properties/seriesOptions',
-                                    options: {
-                                        detail: {
-                                            type: "VerticalLayout"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    ]
-                }
-            },
-            theme: {
-                dataSchema: {
-                    type: 'object',
-                    properties: {
-                        darkShadow: {
-                            type: 'boolean'
-                        },
-                        fontColor: {
-                            type: 'string',
-                            format: 'color'
-                        },
-                        backgroundColor: {
-                            type: 'string',
-                            format: 'color'
-                        },
-                        // width: {
-                        //   type: 'string'
-                        // },
-                        height: {
-                            type: 'string'
-                        }
-                    }
-                }
             }
         };
     }
     exports.getBuilderSchema = getBuilderSchema;
     function getEmbedderSchema() {
         return {
-            general: {
-                dataSchema: {
-                    type: 'object',
-                    properties: {
-                        // apiEndpoint: {
-                        //     type: 'string',
-                        //     title: 'API Endpoint',
-                        //     required: true
-                        // },
-                        title: {
-                            type: 'string',
-                            required: true
-                        },
-                        description: {
-                            type: 'string'
-                        },
-                        options: visualizationOptions
-                    }
-                }
+            dataSchema: {
+                type: 'object',
+                properties: Object.assign({ title: {
+                        type: 'string',
+                        required: true
+                    }, description: {
+                        type: 'string'
+                    }, options: visualizationOptions }, theme)
             },
-            theme: {
-                dataSchema: {
-                    type: 'object',
-                    properties: {
-                        darkShadow: {
-                            type: 'boolean'
-                        },
-                        fontColor: {
-                            type: 'string',
-                            format: 'color'
-                        },
-                        backgroundColor: {
-                            type: 'string',
-                            format: 'color'
-                        },
-                        // width: {
-                        //   type: 'string'
-                        // },
-                        height: {
-                            type: 'string'
-                        }
-                    }
-                }
+            uiSchema: {
+                type: 'Categorization',
+                elements: [
+                    {
+                        type: 'Category',
+                        label: 'General',
+                        elements: [
+                            {
+                                type: 'VerticalLayout',
+                                elements: [
+                                    {
+                                        type: 'Control',
+                                        scope: '#/properties/title'
+                                    },
+                                    {
+                                        type: 'Control',
+                                        scope: '#/properties/description'
+                                    },
+                                    {
+                                        type: 'HorizontalLayout',
+                                        elements: [
+                                            {
+                                                type: 'Control',
+                                                scope: '#/properties/options',
+                                                options: {
+                                                    detail: {
+                                                        type: 'VerticalLayout'
+                                                    }
+                                                }
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    themeUISchema
+                ]
             }
         };
     }
@@ -920,39 +896,55 @@ define("@scom/scom-mixed-chart", ["require", "exports", "@ijstech/components", "
             this.height = this.tag.height || 500;
             this.onUpdateBlock();
         }
-        _getActions(propertiesSchema, themeSchema, advancedSchema) {
+        _getActions(dataSchema, uiSchema, advancedSchema) {
             const builderSchema = (0, formSchema_1.getBuilderSchema)();
             const actions = [
                 {
-                    name: 'General',
-                    icon: 'cog',
+                    name: 'Edit',
+                    icon: 'edit',
                     command: (builder, userInputData) => {
-                        let _oldData = DefaultData;
+                        let oldData = DefaultData;
+                        let oldTag = {};
                         return {
                             execute: async () => {
-                                _oldData = Object.assign({}, this._data);
-                                if (userInputData) {
-                                    if (advancedSchema) {
-                                        this._data = Object.assign(Object.assign({}, this._data), userInputData);
-                                    }
-                                    else {
-                                        this._data = Object.assign({}, userInputData);
-                                    }
+                                oldData = JSON.parse(JSON.stringify(this._data));
+                                const { title, description, options } = userInputData, themeSettings = __rest(userInputData, ["title", "description", "options"]);
+                                const generalSettings = {
+                                    title,
+                                    description,
+                                };
+                                if (advancedSchema) {
+                                    this._data = Object.assign(Object.assign({}, this._data), generalSettings);
+                                }
+                                else {
+                                    this._data = Object.assign(Object.assign({}, generalSettings), { options });
                                 }
                                 if (builder === null || builder === void 0 ? void 0 : builder.setData)
                                     builder.setData(this._data);
                                 this.setData(this._data);
+                                oldTag = JSON.parse(JSON.stringify(this.tag));
+                                if (builder === null || builder === void 0 ? void 0 : builder.setTag)
+                                    builder.setTag(themeSettings);
+                                else
+                                    this.setTag(themeSettings);
                             },
                             undo: () => {
+                                if (advancedSchema)
+                                    oldData = Object.assign(Object.assign({}, oldData), { options: this._data.options });
                                 if (builder === null || builder === void 0 ? void 0 : builder.setData)
-                                    builder.setData(_oldData);
-                                this.setData(_oldData);
+                                    builder.setData(oldData);
+                                this.setData(oldData);
+                                this.tag = JSON.parse(JSON.stringify(oldTag));
+                                if (builder === null || builder === void 0 ? void 0 : builder.setTag)
+                                    builder.setTag(this.tag);
+                                else
+                                    this.setTag(this.tag);
                             },
                             redo: () => { }
                         };
                     },
-                    userInputDataSchema: propertiesSchema,
-                    userInputUISchema: advancedSchema ? undefined : builderSchema.general.uiSchema
+                    userInputDataSchema: dataSchema,
+                    userInputUISchema: uiSchema
                 },
                 {
                     name: 'Data',
@@ -1032,35 +1024,6 @@ define("@scom/scom-mixed-chart", ["require", "exports", "@ijstech/components", "
                             return vstack;
                         }
                     }
-                },
-                {
-                    name: 'Theme Settings',
-                    icon: 'palette',
-                    command: (builder, userInputData) => {
-                        let oldTag = {};
-                        return {
-                            execute: async () => {
-                                if (!userInputData)
-                                    return;
-                                oldTag = JSON.parse(JSON.stringify(this.tag));
-                                if (builder === null || builder === void 0 ? void 0 : builder.setTag)
-                                    builder.setTag(userInputData);
-                                else
-                                    this.setTag(userInputData);
-                            },
-                            undo: () => {
-                                if (!userInputData)
-                                    return;
-                                this.tag = JSON.parse(JSON.stringify(oldTag));
-                                if (builder === null || builder === void 0 ? void 0 : builder.setTag)
-                                    builder.setTag(this.tag);
-                                else
-                                    this.setTag(this.tag);
-                            },
-                            redo: () => { }
-                        };
-                    },
-                    userInputDataSchema: themeSchema
                 }
             ];
             // if (advancedSchema) {
@@ -1099,10 +1062,10 @@ define("@scom/scom-mixed-chart", ["require", "exports", "@ijstech/components", "
                     target: 'Builders',
                     getActions: () => {
                         const builderSchema = (0, formSchema_1.getBuilderSchema)();
-                        const generalSchema = builderSchema.general.dataSchema;
-                        const themeSchema = builderSchema.theme.dataSchema;
+                        const dataSchema = builderSchema.dataSchema;
+                        const uiSchema = builderSchema.uiSchema;
                         const advancedSchema = builderSchema.advanced.dataSchema;
-                        return this._getActions(generalSchema, themeSchema, advancedSchema);
+                        return this._getActions(dataSchema, uiSchema, advancedSchema);
                     },
                     getData: this.getData.bind(this),
                     setData: async (data) => {
@@ -1117,9 +1080,9 @@ define("@scom/scom-mixed-chart", ["require", "exports", "@ijstech/components", "
                     target: 'Embedders',
                     getActions: () => {
                         const embedderSchema = (0, formSchema_1.getEmbedderSchema)();
-                        const generalSchema = embedderSchema.general.dataSchema;
-                        const themeSchema = embedderSchema.theme.dataSchema;
-                        return this._getActions(generalSchema, themeSchema);
+                        const dataSchema = embedderSchema.dataSchema;
+                        const uiSchema = embedderSchema.uiSchema;
+                        return this._getActions(dataSchema, uiSchema);
                     },
                     getLinkParams: () => {
                         const data = this._data || {};

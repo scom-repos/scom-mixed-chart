@@ -154,92 +154,225 @@ const visualizationOptions = {
     }
 }
 
+const theme = {
+    darkShadow: {
+        type: 'boolean'
+    },
+    fontColor: {
+        type: 'string',
+        format: 'color'
+    },
+    backgroundColor: {
+        type: 'string',
+        format: 'color'
+    },
+    // width: {
+    //     type: 'string'
+    // },
+    height: {
+        type: 'string'
+    }
+}
+
+
+const themeUISchema = {
+    type: 'Category',
+    label: 'Theme',
+    elements: [
+        {
+            type: 'VerticalLayout',
+            elements: [
+                {
+                    type: 'Control',
+                    scope: '#/properties/darkShadow'
+                },
+                {
+                    type: 'Control',
+                    scope: '#/properties/fontColor'
+                },
+                {
+                    type: 'Control',
+                    scope: '#/properties/backgroundColor'
+                },
+                {
+                    type: 'Control',
+                    scope: '#/properties/height'
+                }
+            ]
+        }
+    ]
+}
+
 export function getBuilderSchema() {
     return {
-        general: {
+        dataSchema: {
+            type: 'object',
+            required: ['title'],
+            properties: {
+                title: {
+                    type: 'string'
+                },
+                description: {
+                    type: 'string'
+                },
+                ...theme
+            }
+        },
+        uiSchema: {
+            type: 'Categorization',
+            elements: [
+                {
+                    type: 'Category',
+                    label: 'General',
+                    elements: [
+                        {
+                            type: 'VerticalLayout',
+                            elements: [
+                                {
+                                    type: 'Control',
+                                    scope: '#/properties/title'
+                                },
+                                {
+                                    type: 'Control',
+                                    scope: '#/properties/description'
+                                }
+                            ]
+                        }
+                    ]
+                },
+                themeUISchema
+            ]
+        },
+        advanced: {
             dataSchema: {
                 type: 'object',
-                required: ['title'],
                 properties: {
-                    title: {
-                        type: 'string'
-                    },
-                    description: {
-                        type: 'string'
-                    }
+                    options: visualizationOptions
                 }
             },
             uiSchema: {
                 type: 'VerticalLayout',
                 elements: [
-                    // {
-                    //   type: 'Control',
-                    //   scope: '#/properties/apiEndpoint',
-                    //   title: 'API Endpoint'
-                    // },
                     {
-                        type: 'Control',
-                        scope: '#/properties/title'
-                    },
-                    {
-                        type: 'Control',
-                        scope: '#/properties/description'
-                    },
-                    {
-                        type: 'VerticalLayout',
+                        type: 'HorizontalLayout',
                         elements: [
                             {
                                 type: 'Control',
-                                scope: '#/properties/options/properties/xColumn',
-                            },
+                                scope: '#/properties/options/properties/xColumn'
+                            }
+                        ]
+                    },
+                    {
+                        type: 'HorizontalLayout',
+                        elements: [
                             {
                                 type: 'Control',
-                                scope: '#/properties/options/properties/yColumns',
-                            },
+                                scope: '#/properties/options/properties/yColumns'
+                            }
+                        ]
+                    },
+                    {
+                        type: 'HorizontalLayout',
+                        elements: [
                             {
                                 type: 'Control',
-                                scope: '#/properties/options/properties/groupBy',
-                            },
+                                scope: '#/properties/options/properties/groupBy'
+                            }
+                        ]
+                    },
+                    {
+                        type: 'HorizontalLayout',
+                        elements: [
                             {
                                 type: 'Control',
-                                scope: '#/properties/options/properties/globalSeriesType',
-                            },
+                                scope: '#/properties/options/properties/globalSeriesType'
+                            }
+                        ]
+                    },
+                    {
+                        type: 'HorizontalLayout',
+                        elements: [
                             {
                                 type: 'Control',
-                                scope: '#/properties/options/properties/smooth',
-                            },
+                                scope: '#/properties/options/properties/smooth'
+                            }
+                        ]
+                    },
+                    {
+                        type: 'HorizontalLayout',
+                        elements: [
                             {
                                 type: 'Control',
-                                scope: '#/properties/options/properties/stacking',
-                            },
+                                scope: '#/properties/options/properties/stacking'
+                            }
+                        ]
+                    },
+                    {
+                        type: 'HorizontalLayout',
+                        elements: [
                             {
                                 type: 'Control',
-                                scope: '#/properties/options/properties/legend',
-                            },
+                                scope: '#/properties/options/properties/legend'
+                            }
+                        ]
+                    },
+                    {
+                        type: 'HorizontalLayout',
+                        elements: [
                             {
                                 type: 'Control',
-                                scope: '#/properties/options/properties/showSymbol',
-                            },
+                                scope: '#/properties/options/properties/showSymbol'
+                            }
+                        ]
+                    },
+                    {
+                        type: 'HorizontalLayout',
+                        elements: [
                             {
                                 type: 'Control',
-                                scope: '#/properties/options/properties/showDataLabels',
-                            },
+                                scope: '#/properties/options/properties/showDataLabels'
+                            }
+                        ]
+                    },
+                    {
+                        type: 'HorizontalLayout',
+                        elements: [
                             {
                                 type: 'Control',
-                                scope: '#/properties/options/properties/percentage',
-                            },
+                                scope: '#/properties/options/properties/percentage'
+                            }
+                        ]
+                    },
+                    {
+                        type: 'HorizontalLayout',
+                        elements: [
                             {
                                 type: 'Control',
-                                scope: '#/properties/options/properties/xAxis',
-                            },
+                                scope: '#/properties/options/properties/xAxis'
+                            }
+                        ]
+                    },
+                    {
+                        type: 'HorizontalLayout',
+                        elements: [
                             {
                                 type: 'Control',
-                                scope: '#/properties/options/properties/leftYAxis',
-                            },
+                                scope: '#/properties/options/properties/leftYAxis'
+                            }
+                        ]
+                    },
+                    {
+                        type: 'HorizontalLayout',
+                        elements: [
                             {
                                 type: 'Control',
-                                scope: '#/properties/options/properties/rightYAxis',
-                            },
+                                scope: '#/properties/options/properties/rightYAxis'
+                            }
+                        ]
+                    },
+                    {
+                        type: 'HorizontalLayout',
+                        elements: [
                             {
                                 type: 'Control',
                                 scope: '#/properties/options/properties/seriesOptions',
@@ -253,223 +386,65 @@ export function getBuilderSchema() {
                     }
                 ]
             }
-        },
-        advanced: {
-            dataSchema: {
-                type: 'object',
-                properties: {
-                    options: visualizationOptions
-                }
-            },
-            uiSchema: {
-                type: 'VerticalLayout',
-                elements: [
-                    {
-                        type: "HorizontalLayout",
-                        elements: [
-                          {
-                            type: 'Control',
-                            scope: '#/properties/options/properties/xColumn'
-                          }
-                        ]
-                    },
-                    {
-                        type: "HorizontalLayout",
-                        elements: [
-                          {
-                            type: 'Control',
-                            scope: '#/properties/options/properties/yColumns'
-                          }
-                        ]
-                    },
-                    {
-                        type: "HorizontalLayout",
-                        elements: [
-                          {
-                            type: 'Control',
-                            scope: '#/properties/options/properties/groupBy'
-                          }
-                        ]
-                    },
-                    {
-                        type: "HorizontalLayout",
-                        elements: [
-                          {
-                            type: 'Control',
-                            scope: '#/properties/options/properties/globalSeriesType'
-                          }
-                        ]
-                    },
-                    {
-                        type: "HorizontalLayout",
-                        elements: [
-                          {
-                            type: 'Control',
-                            scope: '#/properties/options/properties/smooth'
-                          }
-                        ]
-                    },
-                    {
-                        type: "HorizontalLayout",
-                        elements: [
-                          {
-                            type: 'Control',
-                            scope: '#/properties/options/properties/stacking'
-                          }
-                        ]
-                    },
-                    {
-                        type: "HorizontalLayout",
-                        elements: [
-                          {
-                            type: 'Control',
-                            scope: '#/properties/options/properties/legend'
-                          }
-                        ]
-                    },
-                    {
-                        type: "HorizontalLayout",
-                        elements: [
-                          {
-                            type: 'Control',
-                            scope: '#/properties/options/properties/showSymbol'
-                          }
-                        ]
-                    },
-                    {
-                        type: "HorizontalLayout",
-                        elements: [
-                          {
-                            type: 'Control',
-                            scope: '#/properties/options/properties/showDataLabels'
-                          }
-                        ]
-                    },
-                    {
-                        type: "HorizontalLayout",
-                        elements: [
-                          {
-                            type: 'Control',
-                            scope: '#/properties/options/properties/percentage'
-                          }
-                        ]
-                    },
-                    {
-                        type: "HorizontalLayout",
-                        elements: [
-                          {
-                            type: 'Control',
-                            scope: '#/properties/options/properties/xAxis'
-                          }
-                        ]
-                    },
-                    {
-                        type: "HorizontalLayout",
-                        elements: [
-                          {
-                            type: 'Control',
-                            scope: '#/properties/options/properties/leftYAxis'
-                          }
-                        ]
-                    },
-                    {
-                        type: "HorizontalLayout",
-                        elements: [
-                          {
-                            type: 'Control',
-                            scope: '#/properties/options/properties/rightYAxis'
-                          }
-                        ]
-                    },  
-                    {
-                        type: "HorizontalLayout",
-                        elements: [
-                            {
-                                type: "Control",
-                                scope: '#/properties/options/properties/seriesOptions',
-                                options: {
-                                    detail: {
-                                        type: "VerticalLayout"
-                                    }
-                                }
-                            }
-                        ]
-                    }                   
-                ]
-            }
-        },
-        theme: {
-            dataSchema: {
-                type: 'object',
-                properties: {
-                    darkShadow: {
-                        type: 'boolean'
-                    },
-                    fontColor: {
-                        type: 'string',
-                        format: 'color'
-                    },
-                    backgroundColor: {
-                        type: 'string',
-                        format: 'color'
-                    },
-                    // width: {
-                    //   type: 'string'
-                    // },
-                    height: {
-                        type: 'string'
-                    }
-                }
-            }
         }
     }
 }
 
+
 export function getEmbedderSchema() {
     return {
-        general: {
-            dataSchema: {
-                type: 'object',
-                properties: {
-                    // apiEndpoint: {
-                    //     type: 'string',
-                    //     title: 'API Endpoint',
-                    //     required: true
-                    // },
-                    title: {
-                        type: 'string',
-                        required: true
-                    },
-                    description: {
-                        type: 'string'
-                    },
-                    options: visualizationOptions
-                }
+        dataSchema: {
+            type: 'object',
+            properties: {
+                title: {
+                    type: 'string',
+                    required: true
+                },
+                description: {
+                    type: 'string'
+                },
+                options: visualizationOptions,
+                ...theme
             }
         },
-        theme: {
-            dataSchema: {
-                type: 'object',
-                properties: {
-                    darkShadow: {
-                        type: 'boolean'
-                    },
-                    fontColor: {
-                        type: 'string',
-                        format: 'color'
-                    },
-                    backgroundColor: {
-                        type: 'string',
-                        format: 'color'
-                    },
-                    // width: {
-                    //   type: 'string'
-                    // },
-                    height: {
-                        type: 'string'
-                    }
-                }
-            }
+        uiSchema: {
+            type: 'Categorization',
+            elements: [
+                {
+                    type: 'Category',
+                    label: 'General',
+                    elements: [
+                        {
+                            type: 'VerticalLayout',
+                            elements: [
+                                {
+                                    type: 'Control',
+                                    scope: '#/properties/title'
+                                },
+                                {
+                                    type: 'Control',
+                                    scope: '#/properties/description'
+                                },
+                                {
+                                    type: 'HorizontalLayout',
+                                    elements: [
+                                        {
+                                            type: 'Control',
+                                            scope: '#/properties/options',
+                                            options: {
+                                                detail: {
+                                                    type: 'VerticalLayout'
+                                                }
+                                            }
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                themeUISchema
+            ]
         }
     }
 }
