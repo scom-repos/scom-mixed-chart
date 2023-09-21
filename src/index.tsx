@@ -15,11 +15,11 @@ import {
   Button,
   IUISchema
 } from '@ijstech/components';
-import { IMixedChartConfig, callAPI, formatNumber, groupByCategory, extractUniqueTimes, concatUnique, groupArrayByKey, formatNumberByFormat, getChartType, IMixedChartOptions, isNumeric } from './global/index';
+import { IMixedChartConfig, formatNumber, groupByCategory, extractUniqueTimes, concatUnique, groupArrayByKey, formatNumberByFormat, getChartType, IMixedChartOptions, isNumeric } from './global/index';
 import { chartStyle, containerStyle } from './index.css';
 import assets from './assets';
 import configData from './data.json';
-import ScomChartDataSourceSetup, { ModeType, fetchContentByCID, DataSource } from '@scom/scom-chart-data-source-setup';
+import ScomChartDataSourceSetup, { ModeType, fetchContentByCID, callAPI, DataSource } from '@scom/scom-chart-data-source-setup';
 import { getBuilderSchema, getEmbedderSchema } from './formSchema';
 import ScomMixedChartDataOptionsForm from './dataOptionsForm';
 const Theme = Styles.Theme.ThemeVars;
@@ -56,6 +56,7 @@ export default class ScomMixedChart extends Module {
   private loadingElm: Panel;
   private lbTitle: Label;
   private lbDescription: Label;
+  private columnNames: string[] = [];
   private chartData: { [key: string]: string | number }[] = [];
 
   private _data: IMixedChartConfig = DefaultData;
@@ -98,7 +99,7 @@ export default class ScomMixedChart extends Module {
   }
 
   private _getActions(dataSchema: IDataSchema, uiSchema: IUISchema, advancedSchema?: IDataSchema) {
-    const builderSchema = getBuilderSchema();
+    const builderSchema = getBuilderSchema(this.columnNames);
     const actions = [
       {
         name: 'Edit',
@@ -269,7 +270,7 @@ export default class ScomMixedChart extends Module {
         name: 'Builder Configurator',
         target: 'Builders',
         getActions: () => {
-          const builderSchema = getBuilderSchema();
+          const builderSchema = getBuilderSchema(this.columnNames);
           const dataSchema = builderSchema.dataSchema as IDataSchema;
           const uiSchema = builderSchema.uiSchema as IUISchema;
           const advancedSchema = builderSchema.advanced.dataSchema as any;
@@ -287,7 +288,7 @@ export default class ScomMixedChart extends Module {
         name: 'Emdedder Configurator',
         target: 'Embedders',
         getActions: () => {
-          const embedderSchema = getEmbedderSchema();
+          const embedderSchema = getEmbedderSchema(this.columnNames);
           const dataSchema = embedderSchema.dataSchema as any;
           const uiSchema = embedderSchema.uiSchema as IUISchema;
           return this._getActions(dataSchema, uiSchema);
@@ -349,18 +350,21 @@ export default class ScomMixedChart extends Module {
       try {
         const data = await fetchContentByCID(this._data.file.cid);
         if (data) {
-          this.chartData = data;
+          const { metadata, rows } = data;
+          this.chartData = rows;
+          this.columnNames = metadata?.column_names || [];
           this.onUpdateBlock();
           return;
         }
       } catch { }
     }
     this.chartData = [];
+    this.columnNames = [];
     this.onUpdateBlock();
   }
 
   private async renderLiveData() {
-    const dataSource = this._data.dataSource;
+    const dataSource = this._data.dataSource as DataSource;
     if (dataSource) {
       try {
         const data = await callAPI({
@@ -369,13 +373,16 @@ export default class ScomMixedChart extends Module {
           apiEndpoint: this._data.apiEndpoint
         });
         if (data) {
-          this.chartData = data;
+          const { metadata, rows } = data;
+          this.chartData = rows;
+          this.columnNames = metadata?.column_names || [];
           this.onUpdateBlock();
           return;
         }
       } catch { }
     }
     this.chartData = [];
+    this.columnNames = [];
     this.onUpdateBlock();
   }
 
