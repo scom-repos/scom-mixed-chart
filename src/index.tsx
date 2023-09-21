@@ -394,18 +394,23 @@ export default class ScomMixedChart extends Module {
     this.lbDescription.visible = !!description;
     this.pnlChart.height = `calc(100% - ${this.vStackInfo.offsetHeight + 10}px)`;
     const { xColumn, yColumns, groupBy, globalSeriesType, seriesOptions, smooth, stacking, legend, showSymbol, showDataLabels, percentage, xAxis, leftYAxis, rightYAxis } = options;
-    const { key, type } = xColumn;
+    const { key, type, timeFormat } = xColumn;
     let _legend = {
       show: legend?.show,
     }
-    if (legend?.position) {
-      _legend[legend.position] = 'auto';
-      if (['left', 'right'].includes(legend.position)) {
-        _legend['orient'] = 'vertical';
+    if (legend && legend.show) {
+      if (legend.position) {
+        _legend[legend.position] = 'auto';
+        if (['left', 'right'].includes(legend.position)) {
+          _legend['orient'] = 'vertical';
+        }
       }
-    }
-    if (legend?.scroll) {
-      _legend['type'] = 'scroll';
+      if (legend.scroll) {
+        _legend['type'] = 'scroll';
+      }
+      if (legend.fontColor) {
+        _legend['textStyle'] = { color: legend.fontColor };
+      }
     }
     let yAxisMapping: { [key: string]: boolean } = {};
     let labelFormats: { [key: string]: string } = {};
@@ -422,13 +427,15 @@ export default class ScomMixedChart extends Module {
         nameLocation: 'center',
         nameGap: yAxis?.title ? 40 : 15,
         nameTextStyle: {
-          fontWeight: 'bold'
+          fontWeight: 'bold',
+          color: yAxis?.fontColor
         },
         position: v,
         axisLabel: {
           showMinLabel: false,
           showMaxLabel: false,
           fontSize: 10,
+          color: yAxis?.fontColor,
           position: 'end',
           formatter: (value: number, index: number) => {
             return formatNumber(value, { format: yAxis?.tickFormat, decimals: 2, percentValues: percentage })
@@ -447,7 +454,7 @@ export default class ScomMixedChart extends Module {
       const keys = Object.keys(group);
       keys.map(v => {
         const _data = concatUnique(times, group[v]);
-        groupData[v] = groupArrayByKey(Object.keys(_data).map(m => [type === 'time' ? new Date(m) : m, _data[m]]));
+        groupData[v] = groupArrayByKey(Object.keys(_data).map(m => [type === 'time' ? moment(m, timeFormat).toDate() : m, _data[m]]));
       });
       const isPercentage = percentage && groupData[keys[0]] && isNumeric(groupData[keys[0]][0][1]);
       _series = keys.map(v => {
@@ -500,7 +507,7 @@ export default class ScomMixedChart extends Module {
         if (isPercentage && !isNumeric(arr[0][col])) {
           isPercentage = false;
         }
-        groupData[col] = groupArrayByKey(arr.map(v => [type === 'time' ? new Date(v[key]) : col, v[col]]));
+        groupData[col] = groupArrayByKey(arr.map(v => [type === 'time' ? moment(v[key], timeFormat).toDate() : col, v[col]]));
       });
       _series = yColumns.map((col) => {
         let _data = [];
@@ -611,11 +618,13 @@ export default class ScomMixedChart extends Module {
         nameLocation: 'center',
         nameGap: xAxis?.title ? 25 : 15,
         nameTextStyle: {
-          fontWeight: 'bold'
+          fontWeight: 'bold',
+          color: xAxis?.fontColor
         },
         axisLabel: {
           fontSize: 10,
           hideOverlap: true,
+          color: xAxis?.fontColor,
           formatter: xAxis?.tickFormat ? (value: number, index: number) => {
             if (type === 'time') {
               return moment(value).format(xAxis.tickFormat)
