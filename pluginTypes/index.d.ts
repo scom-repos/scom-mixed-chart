@@ -38,6 +38,7 @@ declare module "@scom/scom-mixed-chart/global/interfaces.ts" {
             tickFormat?: string;
             labelFormat?: string;
         };
+        mergeDuplicateData?: boolean;
         smooth?: boolean;
         legend?: {
             show?: boolean;
@@ -77,7 +78,7 @@ declare module "@scom/scom-mixed-chart/global/utils.ts" {
         percentValues?: boolean;
     }) => any;
     export const formatNumberByFormat: (num: number, format: string, separators?: boolean) => any;
-    export const groupArrayByKey: (arr: [Date | string, string | number][]) => (string | number | Date)[][];
+    export const groupArrayByKey: (arr: [Date | string, string | number][], isMerged?: boolean) => (string | number | Date)[][];
     export const groupByCategory: (data: {
         [key: string]: any;
     }[], category: string, xAxis: string, yAxis: string) => {
@@ -279,6 +280,9 @@ declare module "@scom/scom-mixed-chart/formSchema.ts" {
                                 type: string;
                                 enum: string[];
                                 required: boolean;
+                            };
+                            mergeDuplicateData: {
+                                type: string;
                             };
                             smooth: {
                                 type: string;
@@ -499,6 +503,9 @@ declare module "@scom/scom-mixed-chart/formSchema.ts" {
                             type: string;
                             enum: string[];
                             required: boolean;
+                        };
+                        mergeDuplicateData: {
+                            type: string;
                         };
                         smooth: {
                             type: string;
