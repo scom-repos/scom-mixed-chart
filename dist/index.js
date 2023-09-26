@@ -129,7 +129,7 @@ define("@scom/scom-mixed-chart/global/utils.ts", ["require", "exports", "@ijstec
     // }
     const groupArrayByKey = (arr, isMerged) => {
         if (!isMerged)
-            return;
+            return arr;
         const groups = new Map();
         for (const [key, value] of arr) {
             const strKey = key instanceof Date ? key.getTime().toString() : key.toString();
