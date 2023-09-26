@@ -94,7 +94,7 @@ export const formatNumberByFormat = (num: number, format: string, separators?: b
 // }
 
 export const groupArrayByKey = (arr: [ Date | string, string | number ][], isMerged?: boolean) => {
-  if (!isMerged) return;
+  if (!isMerged) return arr;
   const groups = new Map<string, number | string>();
   for (const [key, value] of arr) {
     const strKey = key instanceof Date ? key.getTime().toString() : key.toString();
