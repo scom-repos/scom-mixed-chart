@@ -1287,6 +1287,7 @@ define("@scom/scom-mixed-chart", ["require", "exports", "@ijstech/components", "
                         fontWeight: 'bold',
                         color: yAxis === null || yAxis === void 0 ? void 0 : yAxis.fontColor
                     },
+                    alignTicks: true,
                     position: v,
                     axisLabel: {
                         // showMinLabel: false,

@@ -438,6 +438,7 @@ export default class ScomMixedChart extends Module {
           fontWeight: 'bold',
           color: yAxis?.fontColor
         },
+        alignTicks: true,
         position: v,
         axisLabel: {
           // showMinLabel: false,
