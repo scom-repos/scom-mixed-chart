@@ -37,6 +37,7 @@ export interface IMixedChartOptions {
     tickFormat?: string,
     labelFormat?: string,
   },
+  mergeDuplicateData?: boolean,
   smooth?: boolean,
   legend?: {
     show?: boolean,

@@ -46,6 +46,9 @@ function visualizationOptions(columns: string[]) {
                 ],
                 required: true
             },
+            mergeDuplicateData: {
+                type: 'boolean'
+            },
             smooth: {
                 type: 'boolean'
             },
@@ -354,6 +357,15 @@ export function getBuilderSchema(columns: string[]) {
                             {
                                 type: 'Control',
                                 scope: '#/properties/options/properties/globalSeriesType'
+                            }
+                        ]
+                    },
+                    {
+                        type: 'HorizontalLayout',
+                        elements: [
+                            {
+                                type: 'Control',
+                                scope: '#/properties/options/properties/mergeDuplicateData'
                             }
                         ]
                     },
