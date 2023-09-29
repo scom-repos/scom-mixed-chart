@@ -619,6 +619,9 @@ export default class ScomMixedChart extends Module {
         }
       },
       legend: _legend,
+      grid: {
+        containLabel: true
+      },
       xAxis: {
         type: type,
         boundaryGap: false,
