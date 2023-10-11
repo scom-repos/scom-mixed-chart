@@ -401,7 +401,7 @@ export default class ScomMixedChart extends Module {
     this.lbDescription.caption = description;
     this.lbDescription.visible = !!description;
     this.pnlChart.height = `calc(100% - ${this.vStackInfo.offsetHeight + 10}px)`;
-    const { xColumn, yColumns, groupBy, globalSeriesType, seriesOptions, smooth, mergeDuplicateData, stacking, legend, showSymbol, showDataLabels, percentage, xAxis, leftYAxis, rightYAxis } = options;
+    const { xColumn, yColumns, groupBy, globalSeriesType, seriesOptions, smooth, mergeDuplicateData, stacking, legend, showSymbol, showDataLabels, percentage, xAxis, leftYAxis, rightYAxis, padding = {} } = options;
     const { key, type, timeFormat } = xColumn;
     let _legend = {
       show: legend?.show,
@@ -576,6 +576,12 @@ export default class ScomMixedChart extends Module {
     // const power = Math.pow(10, Math.floor(Math.log10(minInterval)));
     // const roundedInterval = Math.ceil(minInterval / power) * power;
 
+    const gridPadding = {
+      top: padding.top || 60,
+      bottom: padding.bottom || 60,
+      left: padding.left || '10%',
+      right: padding.right || '10%'
+    }
     const _chartData: any = {
       tooltip: {
         trigger: 'axis',
@@ -620,7 +626,8 @@ export default class ScomMixedChart extends Module {
       },
       legend: _legend,
       grid: {
-        containLabel: true
+        containLabel: true,
+        ...gridPadding
       },
       xAxis: {
         type: type,

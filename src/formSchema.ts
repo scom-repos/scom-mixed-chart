@@ -83,6 +83,24 @@ function visualizationOptions(columns: string[]) {
             percentage: {
                 type: 'boolean'
             },
+            padding: {
+                type: 'object',
+                title: 'Padding (px)',
+                properties: {
+                    top: {
+                        type: 'number'
+                    },
+                    bottom: {
+                        type: 'number'
+                    },
+                    left: {
+                        type: 'number'
+                    },
+                    right: {
+                        type: 'number'
+                    }
+                }
+            },
             xAxis: {
                 type: 'object',
                 properties: {
@@ -420,6 +438,38 @@ export function getBuilderSchema(columns: string[]) {
                             {
                                 type: 'Control',
                                 scope: '#/properties/options/properties/percentage'
+                            }
+                        ]
+                    },
+                    {
+                        type: 'HorizontalLayout',
+                        elements: [
+                            {
+                                type: 'Group',
+                                label: 'Padding (px)',
+                                elements: [
+                                    {
+                                        type: 'HorizontalLayout',
+                                        elements: [
+                                            {
+                                                type: 'Control',
+                                                scope: '#/properties/options/properties/padding/properties/top',
+                                            },
+                                            {
+                                                type: 'Control',
+                                                scope: '#/properties/options/properties/padding/properties/bottom',
+                                            },
+                                            {
+                                                type: 'Control',
+                                                scope: '#/properties/options/properties/padding/properties/left',
+                                            },
+                                            {
+                                                type: 'Control',
+                                                scope: '#/properties/options/properties/padding/properties/right',
+                                            }
+                                        ]
+                                    }
+                                ]
                             }
                         ]
                     },

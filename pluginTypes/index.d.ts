@@ -46,6 +46,12 @@ declare module "@scom/scom-mixed-chart/global/interfaces.ts" {
             scroll?: boolean;
             position?: 'top' | 'bottom' | 'left' | 'right';
         };
+        padding?: {
+            top?: number;
+            bottom?: number;
+            left?: number;
+            right?: number;
+        };
         showSymbol?: boolean;
         showDataLabels?: boolean;
         percentage?: boolean;
@@ -318,6 +324,24 @@ declare module "@scom/scom-mixed-chart/formSchema.ts" {
                             percentage: {
                                 type: string;
                             };
+                            padding: {
+                                type: string;
+                                title: string;
+                                properties: {
+                                    top: {
+                                        type: string;
+                                    };
+                                    bottom: {
+                                        type: string;
+                                    };
+                                    left: {
+                                        type: string;
+                                    };
+                                    right: {
+                                        type: string;
+                                    };
+                                };
+                            };
                             xAxis: {
                                 type: string;
                                 properties: {
@@ -415,6 +439,19 @@ declare module "@scom/scom-mixed-chart/formSchema.ts" {
                     elements: {
                         type: string;
                         scope: string;
+                    }[];
+                } | {
+                    type: string;
+                    elements: {
+                        type: string;
+                        label: string;
+                        elements: {
+                            type: string;
+                            elements: {
+                                type: string;
+                                scope: string;
+                            }[];
+                        }[];
                     }[];
                 } | {
                     type: string;
@@ -540,6 +577,24 @@ declare module "@scom/scom-mixed-chart/formSchema.ts" {
                         };
                         percentage: {
                             type: string;
+                        };
+                        padding: {
+                            type: string;
+                            title: string;
+                            properties: {
+                                top: {
+                                    type: string;
+                                };
+                                bottom: {
+                                    type: string;
+                                };
+                                left: {
+                                    type: string;
+                                };
+                                right: {
+                                    type: string;
+                                };
+                            };
                         };
                         xAxis: {
                             type: string;
