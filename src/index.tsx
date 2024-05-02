@@ -13,7 +13,8 @@ import {
   LineChart,
   moment,
   Button,
-  IUISchema
+  IUISchema,
+  Modal
 } from '@ijstech/components';
 import { IMixedChartConfig, formatNumber, groupByCategory, extractUniqueTimes, concatUnique, groupArrayByKey, formatNumberByFormat, getChartType, IMixedChartOptions, isNumeric } from './global/index';
 import { chartStyle, containerStyle, textStyle } from './index.css';
@@ -22,6 +23,7 @@ import configData from './data.json';
 import ScomChartDataSourceSetup, { ModeType, fetchContentByCID, callAPI, DataSource } from '@scom/scom-chart-data-source-setup';
 import { getBuilderSchema, getEmbedderSchema } from './formSchema';
 import ScomMixedChartDataOptionsForm from './dataOptionsForm';
+import types from './dts/index';
 const Theme = Styles.Theme.ThemeVars;
 
 interface ScomMixedChartElement extends ControlElement {
@@ -46,9 +48,21 @@ const DefaultData: IMixedChartConfig = {
   mode: ModeType.LIVE
 };
 
+interface ICustomWidget {
+  showConfigurator: (parent: Modal, prop: string) => void;
+  register: () => { types: string; defaultData: IMixedChartConfig };
+}
+
 @customModule
-@customElements('i-scom-mixed-chart')
-export default class ScomMixedChart extends Module {
+@customElements('i-scom-mixed-chart', {
+  icon: 'chart-line',
+  className: 'ScomMixedChart',
+  props: {
+    data: { type: 'object' }
+  },
+  events: {}
+})
+export default class ScomMixedChart extends Module implements ICustomWidget {
   private chartContainer: VStack;
   private vStackInfo: HStack;
   private pnlChart: Panel;
@@ -70,6 +84,30 @@ export default class ScomMixedChart extends Module {
 
   constructor(parent?: Container, options?: ScomMixedChartElement) {
     super(parent, options);
+  }
+
+  showConfigurator(parent: Modal, prop: string) {
+    const props = this._getDesignPropValue('data');
+    const builderTarget = this.getConfigurators().find((conf: any) => conf.target === 'Builders');
+    const dataAction = builderTarget?.getActions().find((action: any) => action.name === prop);
+    const self = this;
+    if (dataAction) {
+      const control = dataAction.customUI.render(props, (result: boolean, data: any) => {
+        parent.visible = false;
+        self.onConfigSave(data);
+      })
+      parent.item = control;
+      parent.visible = true;
+    }
+  }
+
+  private onConfigSave(data: IMixedChartConfig) {
+    this._setDesignPropValue('data', data);
+    this.setData({...data});
+  }
+
+  register() {
+    return { types, defaultData: configData.defaultBuilderData as IMixedChartConfig };
   }
 
   private getData() {
@@ -207,7 +245,8 @@ export default class ScomMixedChart extends Module {
               caption: 'Confirm',
               width: 'auto',
               height: 40,
-              font: { color: Theme.colors.primary.contrastText }
+              font: { color: Theme.colors.primary.contrastText },
+              padding: { top: '0.5rem', bottom: '0.5rem', left: '1rem', right: '1rem' }
             });
             hstackBtnConfirm.append(button);
             vstack.append(dataSourceSetup);
@@ -685,7 +724,6 @@ export default class ScomMixedChart extends Module {
   }
 
   async init() {
-    this.isReadyCallbackQueued = true;
     super.init();
     this.updateTheme();
     this.setTag({
@@ -702,7 +740,6 @@ export default class ScomMixedChart extends Module {
         this.setData(data);
       }
     }
-    this.isReadyCallbackQueued = false;
     this.executeReadyCallback();
     window.addEventListener('resize', () => {
       setTimeout(() => {
