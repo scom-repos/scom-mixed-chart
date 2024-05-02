@@ -18,6 +18,17 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+var __rest = (this && this.__rest) || function (s, e) {
+    var t = {};
+    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
+        t[p] = s[p];
+    if (s != null && typeof Object.getOwnPropertySymbols === "function")
+        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+            if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i]))
+                t[p[i]] = s[p[i]];
+        }
+    return t;
+};
 define("@scom/scom-mixed-chart/global/interfaces.ts", ["require", "exports"], function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
@@ -127,7 +138,7 @@ define("@scom/scom-mixed-chart/global/utils.ts", ["require", "exports", "@ijstec
     };
     exports.extractUniqueTimes = extractUniqueTimes;
     const concatUnique = (obj1, obj2) => {
-        const merged = { ...obj1, ...obj2 };
+        const merged = Object.assign(Object.assign({}, obj1), obj2);
         return Object.keys(merged).reduce((acc, key) => {
             if (!acc.hasOwnProperty(key)) {
                 acc[key] = merged[key];
@@ -192,6 +203,7 @@ define("@scom/scom-mixed-chart/data.json.ts", ["require", "exports"], function (
     exports.default = {
         defaultBuilderData: {
             // apiEndpoint: "/dune/query/1333833",
+            "mode": "Live",
             "dataSource": "Dune",
             "queryId": "1333833",
             title: 'Reserve Cumulative Value',
@@ -572,15 +584,11 @@ define("@scom/scom-mixed-chart/formSchema.ts", ["require", "exports"], function 
             dataSchema: {
                 type: 'object',
                 required: ['title'],
-                properties: {
-                    title: {
+                properties: Object.assign({ title: {
                         type: 'string'
-                    },
-                    description: {
+                    }, description: {
                         type: 'string'
-                    },
-                    ...theme
-                }
+                    } }, theme)
             },
             uiSchema: {
                 type: 'Categorization',
@@ -799,17 +807,12 @@ define("@scom/scom-mixed-chart/formSchema.ts", ["require", "exports"], function 
         return {
             dataSchema: {
                 type: 'object',
-                properties: {
-                    title: {
+                properties: Object.assign({ title: {
                         type: 'string',
                         required: true
-                    },
-                    description: {
+                    }, description: {
                         type: 'string'
-                    },
-                    options: visualizationOptions(columns),
-                    ...theme
-                }
+                    }, options: visualizationOptions(columns) }, theme)
             },
             uiSchema: {
                 type: 'Categorization',
@@ -923,7 +926,926 @@ define("@scom/scom-mixed-chart/dataOptionsForm.tsx", ["require", "exports", "@ij
     ], ScomMixedChartDataOptionsForm);
     exports.default = ScomMixedChartDataOptionsForm;
 });
-define("@scom/scom-mixed-chart", ["require", "exports", "@ijstech/components", "@scom/scom-mixed-chart/global/index.ts", "@scom/scom-mixed-chart/index.css.ts", "@scom/scom-mixed-chart/assets.ts", "@scom/scom-mixed-chart/data.json.ts", "@scom/scom-chart-data-source-setup", "@scom/scom-mixed-chart/formSchema.ts", "@scom/scom-mixed-chart/dataOptionsForm.tsx"], function (require, exports, components_5, index_1, index_css_1, assets_1, data_json_1, scom_chart_data_source_setup_1, formSchema_1, dataOptionsForm_1) {
+define("@scom/scom-mixed-chart/dts/index.ts", ["require", "exports"], function (require, exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    ///<amd-module name='@scom/scom-mixed-chart/dts/index.ts'/> 
+    exports.default = `/// <amd-module name="@scom/scom-mixed-chart/global/interfaces.ts" />
+declare module "@scom/scom-mixed-chart/global/interfaces.ts" {
+    import { BigNumber } from "@ijstech/eth-wallet";
+    import { ModeType } from "@scom/scom-chart-data-source-setup";
+    export interface IMixedChartOptions {
+        xColumn?: {
+            key: string;
+            type: 'time' | 'category';
+            timeFormat?: string;
+        };
+        yColumns?: string[];
+        globalSeriesType: 'bar' | 'line' | 'area' | 'scatter';
+        groupBy?: string;
+        seriesOptions: {
+            key: string;
+            type: 'bar' | 'line' | 'area' | 'scatter';
+            yAxis: 'left' | 'right';
+            zIndex?: number;
+            title?: string;
+            color?: string;
+        }[];
+        stacking?: boolean;
+        xAxis?: {
+            title?: string;
+            fontColor?: string;
+            tickFormat?: string;
+            reverseValues?: boolean;
+        };
+        leftYAxis?: {
+            title?: string;
+            fontColor?: string;
+            tickFormat?: string;
+            labelFormat?: string;
+        };
+        rightYAxis?: {
+            title?: string;
+            fontColor?: string;
+            tickFormat?: string;
+            labelFormat?: string;
+        };
+        mergeDuplicateData?: boolean;
+        smooth?: boolean;
+        legend?: {
+            show?: boolean;
+            fontColor?: string;
+            scroll?: boolean;
+            position?: 'top' | 'bottom' | 'left' | 'right';
+        };
+        padding?: {
+            top?: number;
+            bottom?: number;
+            left?: number;
+            right?: number;
+        };
+        showSymbol?: boolean;
+        showDataLabels?: boolean;
+        percentage?: boolean;
+    }
+    export interface IMixedChartConfig {
+        dataSource: string;
+        queryId?: string;
+        apiEndpoint?: string;
+        title: string;
+        description?: string;
+        options: IMixedChartOptions;
+        file?: {
+            cid: string;
+            name: string;
+        };
+        mode: ModeType;
+    }
+    export interface IFormatNumberOptions {
+        precision?: number;
+        roundingMode?: BigNumber.RoundingMode;
+    }
+}
+/// <amd-module name="@scom/scom-mixed-chart/global/utils.ts" />
+declare module "@scom/scom-mixed-chart/global/utils.ts" {
+    import { BigNumber } from '@ijstech/eth-wallet';
+    export const isNumeric: (value: string | number | BigNumber) => boolean;
+    export const formatNumber: (num: number, options?: {
+        format?: string;
+        decimals?: number;
+        percentValues?: boolean;
+    }) => any;
+    export const formatNumberByFormat: (num: number, format: string, separators?: boolean) => any;
+    export const groupArrayByKey: (arr: [Date | string, string | number][], isMerged?: boolean) => (string | number | Date)[][];
+    export const groupByCategory: (data: {
+        [key: string]: any;
+    }[], category: string, xAxis: string, yAxis: string) => {
+        [key: string]: any;
+    };
+    export const extractUniqueTimes: (data: {
+        [key: string]: any;
+    }[], keyValue: string) => {
+        [key: string]: any;
+    };
+    export const concatUnique: (obj1: {
+        [key: string]: any;
+    }, obj2: {
+        [key: string]: any;
+    }) => {};
+    export const getChartType: (type: string, defaultType?: string) => string;
+}
+/// <amd-module name="@scom/scom-mixed-chart/global/index.ts" />
+declare module "@scom/scom-mixed-chart/global/index.ts" {
+    export * from "@scom/scom-mixed-chart/global/interfaces.ts";
+    export * from "@scom/scom-mixed-chart/global/utils.ts";
+}
+/// <amd-module name="@scom/scom-mixed-chart/index.css.ts" />
+declare module "@scom/scom-mixed-chart/index.css.ts" {
+    export const containerStyle: string;
+    export const textStyle: string;
+    export const chartStyle: string;
+}
+/// <amd-module name="@scom/scom-mixed-chart/assets.ts" />
+declare module "@scom/scom-mixed-chart/assets.ts" {
+    function fullPath(path: string): string;
+    const _default: {
+        fullPath: typeof fullPath;
+    };
+    export default _default;
+}
+/// <amd-module name="@scom/scom-mixed-chart/data.json.ts" />
+declare module "@scom/scom-mixed-chart/data.json.ts" {
+    const _default_1: {
+        defaultBuilderData: {
+            mode: string;
+            dataSource: string;
+            queryId: string;
+            title: string;
+            description: string;
+            options: {
+                xColumn: {
+                    key: string;
+                    type: string;
+                };
+                yColumns: string[];
+                globalSeriesType: string;
+                stacking: boolean;
+                seriesOptions: ({
+                    key: string;
+                    title: string;
+                    type: string;
+                    yAxis: string;
+                    color?: undefined;
+                } | {
+                    key: string;
+                    title: string;
+                    type: string;
+                    yAxis: string;
+                    color: string;
+                })[];
+                xAxis: {
+                    title: string;
+                    tickFormat: string;
+                };
+                leftYAxis: {
+                    labelFormat: string;
+                };
+                rightYAxis: {
+                    tickFormat: string;
+                    labelFormat: string;
+                };
+            };
+        };
+    };
+    export default _default_1;
+}
+/// <amd-module name="@scom/scom-mixed-chart/formSchema.ts" />
+declare module "@scom/scom-mixed-chart/formSchema.ts" {
+    export function getBuilderSchema(columns: string[]): {
+        dataSchema: {
+            type: string;
+            required: string[];
+            properties: {
+                darkShadow: {
+                    type: string;
+                };
+                customFontColor: {
+                    type: string;
+                };
+                fontColor: {
+                    type: string;
+                    format: string;
+                };
+                customBackgroundColor: {
+                    type: string;
+                };
+                backgroundColor: {
+                    type: string;
+                    format: string;
+                };
+                height: {
+                    type: string;
+                };
+                title: {
+                    type: string;
+                };
+                description: {
+                    type: string;
+                };
+            };
+        };
+        uiSchema: {
+            type: string;
+            elements: ({
+                type: string;
+                label: string;
+                elements: {
+                    type: string;
+                    elements: {
+                        type: string;
+                        elements: ({
+                            type: string;
+                            scope: string;
+                            rule?: undefined;
+                        } | {
+                            type: string;
+                            scope: string;
+                            rule: {
+                                effect: string;
+                                condition: {
+                                    scope: string;
+                                    schema: {
+                                        const: boolean;
+                                    };
+                                };
+                            };
+                        })[];
+                    }[];
+                }[];
+            } | {
+                type: string;
+                label: string;
+                elements: {
+                    type: string;
+                    elements: {
+                        type: string;
+                        scope: string;
+                    }[];
+                }[];
+            })[];
+        };
+        advanced: {
+            dataSchema: {
+                type: string;
+                properties: {
+                    options: {
+                        type: string;
+                        title: string;
+                        properties: {
+                            xColumn: {
+                                type: string;
+                                title: string;
+                                required: boolean;
+                                properties: {
+                                    key: {
+                                        type: string;
+                                        enum: string[];
+                                        required: boolean;
+                                    };
+                                    type: {
+                                        type: string;
+                                        enum: string[];
+                                        required: boolean;
+                                    };
+                                    timeFormat: {
+                                        type: string;
+                                    };
+                                };
+                            };
+                            yColumns: {
+                                type: string;
+                                title: string;
+                                required: boolean;
+                                items: {
+                                    type: string;
+                                    enum: string[];
+                                };
+                            };
+                            groupBy: {
+                                type: string;
+                                enum: string[];
+                            };
+                            globalSeriesType: {
+                                type: string;
+                                enum: string[];
+                                required: boolean;
+                            };
+                            mergeDuplicateData: {
+                                type: string;
+                            };
+                            smooth: {
+                                type: string;
+                            };
+                            stacking: {
+                                type: string;
+                            };
+                            legend: {
+                                type: string;
+                                properties: {
+                                    show: {
+                                        type: string;
+                                    };
+                                    fontColor: {
+                                        type: string;
+                                        format: string;
+                                    };
+                                    scroll: {
+                                        type: string;
+                                    };
+                                    position: {
+                                        type: string;
+                                        enum: string[];
+                                    };
+                                };
+                            };
+                            showSymbol: {
+                                type: string;
+                            };
+                            showDataLabels: {
+                                type: string;
+                            };
+                            percentage: {
+                                type: string;
+                            };
+                            padding: {
+                                type: string;
+                                title: string;
+                                properties: {
+                                    top: {
+                                        type: string;
+                                    };
+                                    bottom: {
+                                        type: string;
+                                    };
+                                    left: {
+                                        type: string;
+                                    };
+                                    right: {
+                                        type: string;
+                                    };
+                                };
+                            };
+                            xAxis: {
+                                type: string;
+                                properties: {
+                                    title: {
+                                        type: string;
+                                    };
+                                    fontColor: {
+                                        type: string;
+                                        format: string;
+                                    };
+                                    tickFormat: {
+                                        type: string;
+                                    };
+                                    reverseValues: {
+                                        type: string;
+                                    };
+                                };
+                            };
+                            leftYAxis: {
+                                type: string;
+                                properties: {
+                                    title: {
+                                        type: string;
+                                    };
+                                    fontColor: {
+                                        type: string;
+                                        format: string;
+                                    };
+                                    tickFormat: {
+                                        type: string;
+                                    };
+                                    labelFormat: {
+                                        type: string;
+                                    };
+                                };
+                            };
+                            rightYAxis: {
+                                type: string;
+                                properties: {
+                                    title: {
+                                        type: string;
+                                    };
+                                    fontColor: {
+                                        type: string;
+                                        format: string;
+                                    };
+                                    tickFormat: {
+                                        type: string;
+                                    };
+                                    labelFormat: {
+                                        type: string;
+                                    };
+                                };
+                            };
+                            seriesOptions: {
+                                type: string;
+                                items: {
+                                    type: string;
+                                    properties: {
+                                        key: {
+                                            type: string;
+                                            required: boolean;
+                                        };
+                                        title: {
+                                            type: string;
+                                        };
+                                        type: {
+                                            type: string;
+                                            enum: string[];
+                                            required: boolean;
+                                        };
+                                        yAxis: {
+                                            type: string;
+                                            enum: string[];
+                                            required: boolean;
+                                        };
+                                        zIndex: {
+                                            type: string;
+                                        };
+                                        color: {
+                                            type: string;
+                                            format: string;
+                                        };
+                                    };
+                                };
+                            };
+                        };
+                    };
+                };
+            };
+            uiSchema: {
+                type: string;
+                elements: ({
+                    type: string;
+                    elements: {
+                        type: string;
+                        scope: string;
+                    }[];
+                } | {
+                    type: string;
+                    elements: {
+                        type: string;
+                        label: string;
+                        elements: {
+                            type: string;
+                            elements: {
+                                type: string;
+                                scope: string;
+                            }[];
+                        }[];
+                    }[];
+                } | {
+                    type: string;
+                    elements: {
+                        type: string;
+                        scope: string;
+                        options: {
+                            detail: {
+                                type: string;
+                            };
+                        };
+                    }[];
+                })[];
+            };
+        };
+    };
+    export function getEmbedderSchema(columns: string[]): {
+        dataSchema: {
+            type: string;
+            properties: {
+                darkShadow: {
+                    type: string;
+                };
+                customFontColor: {
+                    type: string;
+                };
+                fontColor: {
+                    type: string;
+                    format: string;
+                };
+                customBackgroundColor: {
+                    type: string;
+                };
+                backgroundColor: {
+                    type: string;
+                    format: string;
+                };
+                height: {
+                    type: string;
+                };
+                title: {
+                    type: string;
+                    required: boolean;
+                };
+                description: {
+                    type: string;
+                };
+                options: {
+                    type: string;
+                    title: string;
+                    properties: {
+                        xColumn: {
+                            type: string;
+                            title: string;
+                            required: boolean;
+                            properties: {
+                                key: {
+                                    type: string;
+                                    enum: string[];
+                                    required: boolean;
+                                };
+                                type: {
+                                    type: string;
+                                    enum: string[];
+                                    required: boolean;
+                                };
+                                timeFormat: {
+                                    type: string;
+                                };
+                            };
+                        };
+                        yColumns: {
+                            type: string;
+                            title: string;
+                            required: boolean;
+                            items: {
+                                type: string;
+                                enum: string[];
+                            };
+                        };
+                        groupBy: {
+                            type: string;
+                            enum: string[];
+                        };
+                        globalSeriesType: {
+                            type: string;
+                            enum: string[];
+                            required: boolean;
+                        };
+                        mergeDuplicateData: {
+                            type: string;
+                        };
+                        smooth: {
+                            type: string;
+                        };
+                        stacking: {
+                            type: string;
+                        };
+                        legend: {
+                            type: string;
+                            properties: {
+                                show: {
+                                    type: string;
+                                };
+                                fontColor: {
+                                    type: string;
+                                    format: string;
+                                };
+                                scroll: {
+                                    type: string;
+                                };
+                                position: {
+                                    type: string;
+                                    enum: string[];
+                                };
+                            };
+                        };
+                        showSymbol: {
+                            type: string;
+                        };
+                        showDataLabels: {
+                            type: string;
+                        };
+                        percentage: {
+                            type: string;
+                        };
+                        padding: {
+                            type: string;
+                            title: string;
+                            properties: {
+                                top: {
+                                    type: string;
+                                };
+                                bottom: {
+                                    type: string;
+                                };
+                                left: {
+                                    type: string;
+                                };
+                                right: {
+                                    type: string;
+                                };
+                            };
+                        };
+                        xAxis: {
+                            type: string;
+                            properties: {
+                                title: {
+                                    type: string;
+                                };
+                                fontColor: {
+                                    type: string;
+                                    format: string;
+                                };
+                                tickFormat: {
+                                    type: string;
+                                };
+                                reverseValues: {
+                                    type: string;
+                                };
+                            };
+                        };
+                        leftYAxis: {
+                            type: string;
+                            properties: {
+                                title: {
+                                    type: string;
+                                };
+                                fontColor: {
+                                    type: string;
+                                    format: string;
+                                };
+                                tickFormat: {
+                                    type: string;
+                                };
+                                labelFormat: {
+                                    type: string;
+                                };
+                            };
+                        };
+                        rightYAxis: {
+                            type: string;
+                            properties: {
+                                title: {
+                                    type: string;
+                                };
+                                fontColor: {
+                                    type: string;
+                                    format: string;
+                                };
+                                tickFormat: {
+                                    type: string;
+                                };
+                                labelFormat: {
+                                    type: string;
+                                };
+                            };
+                        };
+                        seriesOptions: {
+                            type: string;
+                            items: {
+                                type: string;
+                                properties: {
+                                    key: {
+                                        type: string;
+                                        required: boolean;
+                                    };
+                                    title: {
+                                        type: string;
+                                    };
+                                    type: {
+                                        type: string;
+                                        enum: string[];
+                                        required: boolean;
+                                    };
+                                    yAxis: {
+                                        type: string;
+                                        enum: string[];
+                                        required: boolean;
+                                    };
+                                    zIndex: {
+                                        type: string;
+                                    };
+                                    color: {
+                                        type: string;
+                                        format: string;
+                                    };
+                                };
+                            };
+                        };
+                    };
+                };
+            };
+        };
+        uiSchema: {
+            type: string;
+            elements: ({
+                type: string;
+                label: string;
+                elements: {
+                    type: string;
+                    elements: {
+                        type: string;
+                        elements: ({
+                            type: string;
+                            scope: string;
+                            rule?: undefined;
+                        } | {
+                            type: string;
+                            scope: string;
+                            rule: {
+                                effect: string;
+                                condition: {
+                                    scope: string;
+                                    schema: {
+                                        const: boolean;
+                                    };
+                                };
+                            };
+                        })[];
+                    }[];
+                }[];
+            } | {
+                type: string;
+                label: string;
+                elements: {
+                    type: string;
+                    elements: ({
+                        type: string;
+                        scope: string;
+                        elements?: undefined;
+                    } | {
+                        type: string;
+                        elements: {
+                            type: string;
+                            scope: string;
+                            options: {
+                                detail: {
+                                    type: string;
+                                };
+                            };
+                        }[];
+                        scope?: undefined;
+                    })[];
+                }[];
+            })[];
+        };
+    };
+}
+/// <amd-module name="@scom/scom-mixed-chart/dataOptionsForm.tsx" />
+declare module "@scom/scom-mixed-chart/dataOptionsForm.tsx" {
+    import { Module, ControlElement, Container } from '@ijstech/components';
+    interface IData {
+        options: any;
+    }
+    interface ScomMixedChartDataOptionsFormElement extends ControlElement {
+        dataSchema?: string;
+        uiSchema?: string;
+        options: any;
+    }
+    global {
+        namespace JSX {
+            interface IntrinsicElements {
+                ["i-scom-mixed-chart-data-options-form"]: ScomMixedChartDataOptionsFormElement;
+            }
+        }
+    }
+    export default class ScomMixedChartDataOptionsForm extends Module {
+        private formEl;
+        private _dataSchema;
+        private _uiSchema;
+        private _data;
+        constructor(parent?: Container, options?: any);
+        get data(): IData;
+        set data(value: IData);
+        refreshFormData(): Promise<IData>;
+        private renderUI;
+        private onInputChanged;
+        onCustomInputChanged(data: IData): Promise<void>;
+        init(): Promise<void>;
+        render(): any;
+    }
+}
+/// <amd-module name="@scom/scom-mixed-chart/dts/index.ts" />
+declare module "@scom/scom-mixed-chart/dts/index.ts" {
+    const _default_2: "";
+    export default _default_2;
+}
+/// <amd-module name="@scom/scom-mixed-chart" />
+declare module "@scom/scom-mixed-chart" {
+    import { Module, ControlElement, Container, IDataSchema, VStack, IUISchema, Modal } from '@ijstech/components';
+    import { IMixedChartConfig } from "@scom/scom-mixed-chart/global/index.ts";
+    interface ScomMixedChartElement extends ControlElement {
+        lazyLoad?: boolean;
+        data: IMixedChartConfig;
+    }
+    global {
+        namespace JSX {
+            interface IntrinsicElements {
+                ['i-scom-mixed-chart']: ScomMixedChartElement;
+            }
+        }
+    }
+    interface ICustomWidget {
+        showConfigurator: (parent: Modal, prop: string) => void;
+        register: () => {
+            types: string;
+            defaultData: IMixedChartConfig;
+        };
+    }
+    export default class ScomMixedChart extends Module implements ICustomWidget {
+        private chartContainer;
+        private vStackInfo;
+        private pnlChart;
+        private loadingElm;
+        private lbTitle;
+        private lbDescription;
+        private columnNames;
+        private chartData;
+        private _data;
+        tag: any;
+        defaultEdit: boolean;
+        static create(options?: ScomMixedChartElement, parent?: Container): Promise<ScomMixedChart>;
+        constructor(parent?: Container, options?: ScomMixedChartElement);
+        showConfigurator(parent: Modal, prop: string): void;
+        private onConfigSave;
+        register(): {
+            types: string;
+            defaultData: IMixedChartConfig;
+        };
+        private getData;
+        private setData;
+        private getTag;
+        private setTag;
+        private _getActions;
+        getConfigurators(): ({
+            name: string;
+            target: string;
+            getActions: () => ({
+                name: string;
+                icon: string;
+                command: (builder: any, userInputData: any) => {
+                    execute: () => Promise<void>;
+                    undo: () => void;
+                    redo: () => void;
+                };
+                userInputDataSchema: IDataSchema;
+                userInputUISchema: IUISchema;
+                customUI?: undefined;
+            } | {
+                name: string;
+                icon: string;
+                command: (builder: any, userInputData: any) => {
+                    execute: () => Promise<void>;
+                    undo: () => void;
+                    redo: () => void;
+                };
+                customUI: {
+                    render: (data?: any, onConfirm?: (result: boolean, data: any) => void, onChange?: (result: boolean, data: any) => void) => VStack;
+                };
+                userInputDataSchema?: undefined;
+                userInputUISchema?: undefined;
+            })[];
+            getData: any;
+            setData: (data: IMixedChartConfig) => Promise<void>;
+            getTag: any;
+            setTag: any;
+            getLinkParams?: undefined;
+            setLinkParams?: undefined;
+        } | {
+            name: string;
+            target: string;
+            getActions: () => ({
+                name: string;
+                icon: string;
+                command: (builder: any, userInputData: any) => {
+                    execute: () => Promise<void>;
+                    undo: () => void;
+                    redo: () => void;
+                };
+                userInputDataSchema: IDataSchema;
+                userInputUISchema: IUISchema;
+                customUI?: undefined;
+            } | {
+                name: string;
+                icon: string;
+                command: (builder: any, userInputData: any) => {
+                    execute: () => Promise<void>;
+                    undo: () => void;
+                    redo: () => void;
+                };
+                customUI: {
+                    render: (data?: any, onConfirm?: (result: boolean, data: any) => void, onChange?: (result: boolean, data: any) => void) => VStack;
+                };
+                userInputDataSchema?: undefined;
+                userInputUISchema?: undefined;
+            })[];
+            getLinkParams: () => {
+                data: string;
+            };
+            setLinkParams: (params: any) => Promise<void>;
+            getData: any;
+            setData: any;
+            getTag: any;
+            setTag: any;
+        })[];
+        private updateStyle;
+        private updateTheme;
+        private onUpdateBlock;
+        private updateChartData;
+        private renderSnapshotData;
+        private renderLiveData;
+        private renderChart;
+        private resizeChart;
+        init(): Promise<void>;
+        render(): any;
+    }
+}
+`;
+});
+define("@scom/scom-mixed-chart", ["require", "exports", "@ijstech/components", "@scom/scom-mixed-chart/global/index.ts", "@scom/scom-mixed-chart/index.css.ts", "@scom/scom-mixed-chart/assets.ts", "@scom/scom-mixed-chart/data.json.ts", "@scom/scom-chart-data-source-setup", "@scom/scom-mixed-chart/formSchema.ts", "@scom/scom-mixed-chart/dataOptionsForm.tsx", "@scom/scom-mixed-chart/dts/index.ts"], function (require, exports, components_5, index_1, index_css_1, assets_1, data_json_1, scom_chart_data_source_setup_1, formSchema_1, dataOptionsForm_1, index_2) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     const Theme = components_5.Styles.Theme.ThemeVars;
@@ -948,6 +1870,27 @@ define("@scom/scom-mixed-chart", ["require", "exports", "@ijstech/components", "
             this._data = DefaultData;
             this.tag = {};
             this.defaultEdit = true;
+        }
+        showConfigurator(parent, prop) {
+            const props = this._getDesignPropValue('data');
+            const builderTarget = this.getConfigurators().find((conf) => conf.target === 'Builders');
+            const dataAction = builderTarget === null || builderTarget === void 0 ? void 0 : builderTarget.getActions().find((action) => action.name === prop);
+            const self = this;
+            if (dataAction) {
+                const control = dataAction.customUI.render(props, (result, data) => {
+                    parent.visible = false;
+                    self.onConfigSave(data);
+                });
+                parent.item = control;
+                parent.visible = true;
+            }
+        }
+        onConfigSave(data) {
+            this._setDesignPropValue('data', data);
+            this.setData(Object.assign({}, data));
+        }
+        register() {
+            return { types: index_2.default, defaultData: data_json_1.default.defaultBuilderData };
         }
         getData() {
             return this._data;
@@ -994,34 +1937,34 @@ define("@scom/scom-mixed-chart", ["require", "exports", "@ijstech/components", "
                         return {
                             execute: async () => {
                                 oldData = JSON.parse(JSON.stringify(this._data));
-                                const { title, description, options, ...themeSettings } = userInputData;
+                                const { title, description, options } = userInputData, themeSettings = __rest(userInputData, ["title", "description", "options"]);
                                 const generalSettings = {
                                     title,
                                     description,
                                 };
                                 if (advancedSchema) {
-                                    this._data = { ...this._data, ...generalSettings };
+                                    this._data = Object.assign(Object.assign({}, this._data), generalSettings);
                                 }
                                 else {
-                                    this._data = { ...generalSettings, options };
+                                    this._data = Object.assign(Object.assign({}, generalSettings), { options });
                                 }
-                                if (builder?.setData)
+                                if (builder === null || builder === void 0 ? void 0 : builder.setData)
                                     builder.setData(this._data);
                                 this.setData(this._data);
                                 oldTag = JSON.parse(JSON.stringify(this.tag));
-                                if (builder?.setTag)
+                                if (builder === null || builder === void 0 ? void 0 : builder.setTag)
                                     builder.setTag(themeSettings);
                                 else
                                     this.setTag(themeSettings);
                             },
                             undo: () => {
                                 if (advancedSchema)
-                                    oldData = { ...oldData, options: this._data.options };
-                                if (builder?.setData)
+                                    oldData = Object.assign(Object.assign({}, oldData), { options: this._data.options });
+                                if (builder === null || builder === void 0 ? void 0 : builder.setData)
                                     builder.setData(oldData);
                                 this.setData(oldData);
                                 this.tag = JSON.parse(JSON.stringify(oldTag));
-                                if (builder?.setTag)
+                                if (builder === null || builder === void 0 ? void 0 : builder.setTag)
                                     builder.setTag(this.tag);
                                 else
                                     this.setTag(this.tag);
@@ -1039,25 +1982,25 @@ define("@scom/scom-mixed-chart", ["require", "exports", "@ijstech/components", "
                         let _oldData = DefaultData;
                         return {
                             execute: async () => {
-                                _oldData = { ...this._data };
-                                if (userInputData?.mode)
-                                    this._data.mode = userInputData?.mode;
-                                if (userInputData?.file)
-                                    this._data.file = userInputData?.file;
-                                if (userInputData?.dataSource)
-                                    this._data.dataSource = userInputData?.dataSource;
-                                if (userInputData?.queryId)
-                                    this._data.queryId = userInputData?.queryId;
-                                if (userInputData?.apiEndpoint)
-                                    this._data.apiEndpoint = userInputData?.apiEndpoint;
-                                if (userInputData?.options !== undefined)
+                                _oldData = Object.assign({}, this._data);
+                                if (userInputData === null || userInputData === void 0 ? void 0 : userInputData.mode)
+                                    this._data.mode = userInputData === null || userInputData === void 0 ? void 0 : userInputData.mode;
+                                if (userInputData === null || userInputData === void 0 ? void 0 : userInputData.file)
+                                    this._data.file = userInputData === null || userInputData === void 0 ? void 0 : userInputData.file;
+                                if (userInputData === null || userInputData === void 0 ? void 0 : userInputData.dataSource)
+                                    this._data.dataSource = userInputData === null || userInputData === void 0 ? void 0 : userInputData.dataSource;
+                                if (userInputData === null || userInputData === void 0 ? void 0 : userInputData.queryId)
+                                    this._data.queryId = userInputData === null || userInputData === void 0 ? void 0 : userInputData.queryId;
+                                if (userInputData === null || userInputData === void 0 ? void 0 : userInputData.apiEndpoint)
+                                    this._data.apiEndpoint = userInputData === null || userInputData === void 0 ? void 0 : userInputData.apiEndpoint;
+                                if ((userInputData === null || userInputData === void 0 ? void 0 : userInputData.options) !== undefined)
                                     this._data.options = userInputData.options;
-                                if (builder?.setData)
+                                if (builder === null || builder === void 0 ? void 0 : builder.setData)
                                     builder.setData(this._data);
                                 this.setData(this._data);
                             },
                             undo: () => {
-                                if (builder?.setData)
+                                if (builder === null || builder === void 0 ? void 0 : builder.setData)
                                     builder.setData(_oldData);
                                 this.setData(_oldData);
                             },
@@ -1067,18 +2010,11 @@ define("@scom/scom-mixed-chart", ["require", "exports", "@ijstech/components", "
                     customUI: {
                         render: (data, onConfirm, onChange) => {
                             const vstack = new components_5.VStack(null, { gap: '1rem' });
-                            const dataSourceSetup = new scom_chart_data_source_setup_1.default(null, {
-                                ...this._data,
-                                chartData: JSON.stringify(this.chartData),
-                                onCustomDataChanged: async (dataSourceSetupData) => {
+                            const dataSourceSetup = new scom_chart_data_source_setup_1.default(null, Object.assign(Object.assign({}, this._data), { chartData: JSON.stringify(this.chartData), onCustomDataChanged: async (dataSourceSetupData) => {
                                     if (onChange) {
-                                        onChange(true, {
-                                            ...this._data,
-                                            ...dataSourceSetupData
-                                        });
+                                        onChange(true, Object.assign(Object.assign({}, this._data), dataSourceSetupData));
                                     }
-                                }
-                            });
+                                } }));
                             const hstackBtnConfirm = new components_5.HStack(null, {
                                 verticalAlignment: 'center',
                                 horizontalAlignment: 'end'
@@ -1087,7 +2023,8 @@ define("@scom/scom-mixed-chart", ["require", "exports", "@ijstech/components", "
                                 caption: 'Confirm',
                                 width: 'auto',
                                 height: 40,
-                                font: { color: Theme.colors.primary.contrastText }
+                                font: { color: Theme.colors.primary.contrastText },
+                                padding: { top: '0.5rem', bottom: '0.5rem', left: '1rem', right: '1rem' }
                             });
                             hstackBtnConfirm.append(button);
                             vstack.append(dataSourceSetup);
@@ -1100,26 +2037,18 @@ define("@scom/scom-mixed-chart", ["require", "exports", "@ijstech/components", "
                             vstack.append(hstackBtnConfirm);
                             if (onChange) {
                                 dataOptionsForm.onCustomInputChanged = async (optionsFormData) => {
-                                    onChange(true, {
-                                        ...this._data,
-                                        ...optionsFormData,
-                                        ...dataSourceSetup.data
-                                    });
+                                    onChange(true, Object.assign(Object.assign(Object.assign({}, this._data), optionsFormData), dataSourceSetup.data));
                                 };
                             }
                             button.onClick = async () => {
                                 const { dataSource, file, mode } = dataSourceSetup.data;
                                 if (mode === scom_chart_data_source_setup_1.ModeType.LIVE && !dataSource)
                                     return;
-                                if (mode === scom_chart_data_source_setup_1.ModeType.SNAPSHOT && !file?.cid)
+                                if (mode === scom_chart_data_source_setup_1.ModeType.SNAPSHOT && !(file === null || file === void 0 ? void 0 : file.cid))
                                     return;
                                 if (onConfirm) {
                                     const optionsFormData = await dataOptionsForm.refreshFormData();
-                                    onConfirm(true, {
-                                        ...this._data,
-                                        ...optionsFormData,
-                                        ...dataSourceSetup.data
-                                    });
+                                    onConfirm(true, Object.assign(Object.assign(Object.assign({}, this._data), optionsFormData), dataSourceSetup.data));
                                 }
                             };
                             return vstack;
@@ -1171,7 +2100,7 @@ define("@scom/scom-mixed-chart", ["require", "exports", "@ijstech/components", "
                     getData: this.getData.bind(this),
                     setData: async (data) => {
                         const defaultData = data_json_1.default.defaultBuilderData;
-                        await this.setData({ ...defaultData, ...data });
+                        await this.setData(Object.assign(Object.assign({}, defaultData), data));
                     },
                     getTag: this.getTag.bind(this),
                     setTag: this.setTag.bind(this)
@@ -1196,10 +2125,7 @@ define("@scom/scom-mixed-chart", ["require", "exports", "@ijstech/components", "
                             const utf8String = decodeURIComponent(params.data);
                             const decodedString = window.atob(utf8String);
                             const newData = JSON.parse(decodedString);
-                            let resultingData = {
-                                ...self._data,
-                                ...newData
-                            };
+                            let resultingData = Object.assign(Object.assign({}, self._data), newData);
                             await this.setData(resultingData);
                         }
                     },
@@ -1214,8 +2140,9 @@ define("@scom/scom-mixed-chart", ["require", "exports", "@ijstech/components", "
             value ? this.style.setProperty(name, value) : this.style.removeProperty(name);
         }
         updateTheme() {
+            var _a;
             if (this.chartContainer) {
-                this.chartContainer.style.boxShadow = this.tag?.darkShadow ? '0 -2px 10px rgba(0, 0, 0, 1)' : 'rgba(0, 0, 0, 0.16) 0px 1px 4px';
+                this.chartContainer.style.boxShadow = ((_a = this.tag) === null || _a === void 0 ? void 0 : _a.darkShadow) ? '0 -2px 10px rgba(0, 0, 0, 1)' : 'rgba(0, 0, 0, 0.16) 0px 1px 4px';
             }
             const tags = this.tag || {};
             this.updateStyle('--custom-text-color', tags.customFontColor ? tags.fontColor : tags.customWidgetsColor ? tags.widgetsColor : tags.parentCustomFontColor ? tags.parentFontColor : '');
@@ -1226,26 +2153,28 @@ define("@scom/scom-mixed-chart", ["require", "exports", "@ijstech/components", "
             this.updateTheme();
         }
         async updateChartData() {
+            var _a;
             this.loadingElm.visible = true;
-            if (this._data?.mode === scom_chart_data_source_setup_1.ModeType.SNAPSHOT)
+            if (((_a = this._data) === null || _a === void 0 ? void 0 : _a.mode) === scom_chart_data_source_setup_1.ModeType.SNAPSHOT)
                 await this.renderSnapshotData();
             else
                 await this.renderLiveData();
             this.loadingElm.visible = false;
         }
         async renderSnapshotData() {
-            if (this._data.file?.cid) {
+            var _a;
+            if ((_a = this._data.file) === null || _a === void 0 ? void 0 : _a.cid) {
                 try {
                     const data = await (0, scom_chart_data_source_setup_1.fetchContentByCID)(this._data.file.cid);
                     if (data) {
                         const { metadata, rows } = data;
                         this.chartData = rows;
-                        this.columnNames = metadata?.column_names || [];
+                        this.columnNames = (metadata === null || metadata === void 0 ? void 0 : metadata.column_names) || [];
                         this.onUpdateBlock();
                         return;
                     }
                 }
-                catch { }
+                catch (_b) { }
             }
             this.chartData = [];
             this.columnNames = [];
@@ -1263,12 +2192,12 @@ define("@scom/scom-mixed-chart", ["require", "exports", "@ijstech/components", "
                     if (data) {
                         const { metadata, rows } = data;
                         this.chartData = rows;
-                        this.columnNames = metadata?.column_names || [];
+                        this.columnNames = (metadata === null || metadata === void 0 ? void 0 : metadata.column_names) || [];
                         this.onUpdateBlock();
                         return;
                     }
                 }
-                catch { }
+                catch (_a) { }
             }
             this.chartData = [];
             this.columnNames = [];
@@ -1285,7 +2214,7 @@ define("@scom/scom-mixed-chart", ["require", "exports", "@ijstech/components", "
             const { xColumn, yColumns, groupBy, globalSeriesType, seriesOptions, smooth, mergeDuplicateData, stacking, legend, showSymbol, showDataLabels, percentage, xAxis, leftYAxis, rightYAxis, padding = {} } = options;
             const { key, type, timeFormat } = xColumn;
             let _legend = {
-                show: legend?.show,
+                show: legend === null || legend === void 0 ? void 0 : legend.show,
             };
             if (legend && legend.show) {
                 if (legend.position) {
@@ -1305,19 +2234,19 @@ define("@scom/scom-mixed-chart", ["require", "exports", "@ijstech/components", "
             let labelFormats = {};
             for (const opt of seriesOptions) {
                 yAxisMapping[opt.yAxis] = true;
-                labelFormats[opt.title || opt.key] = opt.yAxis === 'left' ? leftYAxis?.labelFormat : rightYAxis?.labelFormat;
+                labelFormats[opt.title || opt.key] = opt.yAxis === 'left' ? leftYAxis === null || leftYAxis === void 0 ? void 0 : leftYAxis.labelFormat : rightYAxis === null || rightYAxis === void 0 ? void 0 : rightYAxis.labelFormat;
             }
             let _yAxis = [];
             Object.keys(yAxisMapping).map(v => {
                 const yAxis = v === 'left' ? leftYAxis : rightYAxis;
                 _yAxis.push({
                     type: 'value',
-                    name: yAxis?.title || '',
+                    name: (yAxis === null || yAxis === void 0 ? void 0 : yAxis.title) || '',
                     nameLocation: 'center',
-                    nameGap: yAxis?.title ? 40 : 15,
+                    nameGap: (yAxis === null || yAxis === void 0 ? void 0 : yAxis.title) ? 40 : 15,
                     nameTextStyle: {
                         fontWeight: 'bold',
-                        color: yAxis?.fontColor
+                        color: yAxis === null || yAxis === void 0 ? void 0 : yAxis.fontColor
                     },
                     alignTicks: true,
                     position: v,
@@ -1325,10 +2254,10 @@ define("@scom/scom-mixed-chart", ["require", "exports", "@ijstech/components", "
                         // showMinLabel: false,
                         // showMaxLabel: false,
                         fontSize: 10,
-                        color: yAxis?.fontColor,
+                        color: yAxis === null || yAxis === void 0 ? void 0 : yAxis.fontColor,
                         position: 'end',
                         formatter: (value, index) => {
-                            return (0, index_1.formatNumber)(value, { format: yAxis?.tickFormat, decimals: 2, percentValues: percentage });
+                            return (0, index_1.formatNumber)(value, { format: yAxis === null || yAxis === void 0 ? void 0 : yAxis.tickFormat, decimals: 2, percentValues: percentage });
                         }
                     },
                     splitNumber: 4
@@ -1348,7 +2277,7 @@ define("@scom/scom-mixed-chart", ["require", "exports", "@ijstech/components", "
                 });
                 const isPercentage = percentage && groupData[keys[0]] && (0, index_1.isNumeric)(groupData[keys[0]][0][1]);
                 _series = keys.map(v => {
-                    const seriesOpt = seriesOptions?.find(f => f.key === v);
+                    const seriesOpt = seriesOptions === null || seriesOptions === void 0 ? void 0 : seriesOptions.find(f => f.key === v);
                     let _data = [];
                     if (isPercentage) {
                         _data = groupData[v].map((vals, idx) => {
@@ -1362,24 +2291,24 @@ define("@scom/scom-mixed-chart", ["require", "exports", "@ijstech/components", "
                     else {
                         _data = groupData[v];
                     }
-                    const isArea = (!seriesOpt?.type && globalSeriesType === 'area') || seriesOpt?.type === 'area';
+                    const isArea = (!(seriesOpt === null || seriesOpt === void 0 ? void 0 : seriesOpt.type) && globalSeriesType === 'area') || (seriesOpt === null || seriesOpt === void 0 ? void 0 : seriesOpt.type) === 'area';
                     const lineStyle = isArea ? {
                         border: 'transparent',
                         width: 0
                     } : undefined;
                     return {
-                        name: seriesOpt?.title || v,
-                        type: (0, index_1.getChartType)(seriesOpt?.type || globalSeriesType, 'line'),
+                        name: (seriesOpt === null || seriesOpt === void 0 ? void 0 : seriesOpt.title) || v,
+                        type: (0, index_1.getChartType)((seriesOpt === null || seriesOpt === void 0 ? void 0 : seriesOpt.type) || globalSeriesType, 'line'),
                         stack: stacking ? `Total_${seriesOpt.type}_${seriesOpt.yAxis}` : undefined,
                         smooth: smooth,
-                        itemStyle: seriesOpt?.color ? { color: seriesOpt.color } : undefined,
+                        itemStyle: (seriesOpt === null || seriesOpt === void 0 ? void 0 : seriesOpt.color) ? { color: seriesOpt.color } : undefined,
                         lineStyle,
                         areaStyle: isArea ? {} : undefined,
                         emphasis: {
                             focus: 'series'
                         },
                         showSymbol: !!showSymbol,
-                        symbolSize: seriesOpt?.type === 'scatter' ? 6 : undefined,
+                        symbolSize: (seriesOpt === null || seriesOpt === void 0 ? void 0 : seriesOpt.type) === 'scatter' ? 6 : undefined,
                         label: showDataLabels ? {
                             show: true,
                             formatter: function (params) {
@@ -1387,8 +2316,8 @@ define("@scom/scom-mixed-chart", ["require", "exports", "@ijstech/components", "
                             }
                         } : undefined,
                         data: _data,
-                        z: seriesOpt?.zIndex,
-                        yAxisIndex: seriesOpt?.yAxis ? _yAxis.findIndex(f => f.position === seriesOpt.yAxis) : undefined
+                        z: seriesOpt === null || seriesOpt === void 0 ? void 0 : seriesOpt.zIndex,
+                        yAxisIndex: (seriesOpt === null || seriesOpt === void 0 ? void 0 : seriesOpt.yAxis) ? _yAxis.findIndex(f => f.position === seriesOpt.yAxis) : undefined
                     };
                 });
             }
@@ -1403,7 +2332,7 @@ define("@scom/scom-mixed-chart", ["require", "exports", "@ijstech/components", "
                 });
                 _series = yColumns.map((col) => {
                     let _data = [];
-                    const seriesOpt = seriesOptions?.find(f => f.key === col);
+                    const seriesOpt = seriesOptions === null || seriesOptions === void 0 ? void 0 : seriesOptions.find(f => f.key === col);
                     if (isPercentage) {
                         _data = groupData[col].map((vals, idx) => {
                             let total = 0;
@@ -1416,24 +2345,24 @@ define("@scom/scom-mixed-chart", ["require", "exports", "@ijstech/components", "
                     else {
                         _data = groupData[col];
                     }
-                    const isArea = (!seriesOpt?.type && globalSeriesType === 'area') || seriesOpt?.type === 'area';
+                    const isArea = (!(seriesOpt === null || seriesOpt === void 0 ? void 0 : seriesOpt.type) && globalSeriesType === 'area') || (seriesOpt === null || seriesOpt === void 0 ? void 0 : seriesOpt.type) === 'area';
                     const lineStyle = isArea ? {
                         border: 'transparent',
                         width: 0
                     } : undefined;
                     return {
-                        name: seriesOpt?.title || col,
-                        type: (0, index_1.getChartType)(seriesOpt?.type || globalSeriesType, 'line'),
+                        name: (seriesOpt === null || seriesOpt === void 0 ? void 0 : seriesOpt.title) || col,
+                        type: (0, index_1.getChartType)((seriesOpt === null || seriesOpt === void 0 ? void 0 : seriesOpt.type) || globalSeriesType, 'line'),
                         stack: stacking ? `Total_${seriesOpt.type}_${seriesOpt.yAxis}` : undefined,
                         smooth: smooth,
-                        itemStyle: seriesOpt?.color ? { color: seriesOpt.color } : undefined,
+                        itemStyle: (seriesOpt === null || seriesOpt === void 0 ? void 0 : seriesOpt.color) ? { color: seriesOpt.color } : undefined,
                         lineStyle,
                         areaStyle: isArea ? {} : undefined,
                         emphasis: {
                             focus: 'series'
                         },
                         showSymbol: !!showSymbol,
-                        symbolSize: seriesOpt?.type === 'scatter' ? 6 : undefined,
+                        symbolSize: (seriesOpt === null || seriesOpt === void 0 ? void 0 : seriesOpt.type) === 'scatter' ? 6 : undefined,
                         label: showDataLabels ? {
                             show: true,
                             formatter: function (params) {
@@ -1441,8 +2370,8 @@ define("@scom/scom-mixed-chart", ["require", "exports", "@ijstech/components", "
                             }
                         } : undefined,
                         data: _data,
-                        z: seriesOpt?.zIndex,
-                        yAxisIndex: seriesOpt?.yAxis ? _yAxis.findIndex(f => f.position === seriesOpt.yAxis) : undefined
+                        z: seriesOpt === null || seriesOpt === void 0 ? void 0 : seriesOpt.zIndex,
+                        yAxisIndex: (seriesOpt === null || seriesOpt === void 0 ? void 0 : seriesOpt.yAxis) ? _yAxis.findIndex(f => f.position === seriesOpt.yAxis) : undefined
                     };
                 });
             }
@@ -1511,26 +2440,23 @@ define("@scom/scom-mixed-chart", ["require", "exports", "@ijstech/components", "
                     }
                 },
                 legend: _legend,
-                grid: {
-                    containLabel: true,
-                    ...gridPadding
-                },
+                grid: Object.assign({ containLabel: true }, gridPadding),
                 xAxis: {
                     type: type,
                     boundaryGap: false,
-                    inverse: xAxis?.reverseValues,
-                    name: xAxis?.title || '',
+                    inverse: xAxis === null || xAxis === void 0 ? void 0 : xAxis.reverseValues,
+                    name: (xAxis === null || xAxis === void 0 ? void 0 : xAxis.title) || '',
                     nameLocation: 'center',
-                    nameGap: xAxis?.title ? 25 : 15,
+                    nameGap: (xAxis === null || xAxis === void 0 ? void 0 : xAxis.title) ? 25 : 15,
                     nameTextStyle: {
                         fontWeight: 'bold',
-                        color: xAxis?.fontColor
+                        color: xAxis === null || xAxis === void 0 ? void 0 : xAxis.fontColor
                     },
                     axisLabel: {
                         fontSize: 10,
                         hideOverlap: true,
-                        color: xAxis?.fontColor,
-                        formatter: xAxis?.tickFormat ? (value, index) => {
+                        color: xAxis === null || xAxis === void 0 ? void 0 : xAxis.fontColor,
+                        formatter: (xAxis === null || xAxis === void 0 ? void 0 : xAxis.tickFormat) ? (value, index) => {
                             if (type === 'time') {
                                 return (0, components_5.moment)(value).format(xAxis.tickFormat);
                             }
@@ -1543,12 +2469,7 @@ define("@scom/scom-mixed-chart", ["require", "exports", "@ijstech/components", "
                     }
                 },
                 yAxis: _yAxis.map(v => {
-                    return {
-                        ...v,
-                        // min: isSingle ? min : undefined,
-                        // max: isSingle ? max : undefined,
-                        // interval: isSingle ? roundedInterval : undefined,
-                    };
+                    return Object.assign({}, v);
                 }),
                 series: _series
             };
@@ -1562,12 +2483,12 @@ define("@scom/scom-mixed-chart", ["require", "exports", "@ijstech/components", "
             chart.drawChart();
         }
         resizeChart() {
+            var _a;
             if (this.pnlChart) {
-                this.pnlChart.firstChild?.resize();
+                (_a = this.pnlChart.firstChild) === null || _a === void 0 ? void 0 : _a.resize();
             }
         }
         async init() {
-            this.isReadyCallbackQueued = true;
             super.init();
             this.updateTheme();
             this.setTag({
@@ -1584,7 +2505,6 @@ define("@scom/scom-mixed-chart", ["require", "exports", "@ijstech/components", "
                     this.setData(data);
                 }
             }
-            this.isReadyCallbackQueued = false;
             this.executeReadyCallback();
             window.addEventListener('resize', () => {
                 setTimeout(() => {
@@ -1605,7 +2525,14 @@ define("@scom/scom-mixed-chart", ["require", "exports", "@ijstech/components", "
     };
     ScomMixedChart = __decorate([
         components_5.customModule,
-        (0, components_5.customElements)('i-scom-mixed-chart')
+        (0, components_5.customElements)('i-scom-mixed-chart', {
+            icon: 'chart-line',
+            className: 'ScomMixedChart',
+            props: {
+                data: { type: 'object' }
+            },
+            events: {}
+        })
     ], ScomMixedChart);
     exports.default = ScomMixedChart;
 });

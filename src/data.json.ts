@@ -1,6 +1,7 @@
 export default {
   defaultBuilderData: {
     // apiEndpoint: "/dune/query/1333833",
+    "mode": "Live",
     "dataSource": "Dune",
     "queryId": "1333833",
     title: 'Reserve Cumulative Value',
