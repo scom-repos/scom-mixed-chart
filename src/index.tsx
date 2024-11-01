@@ -10,12 +10,12 @@ import {
   VStack,
   Styles,
   Panel,
-  LineChart,
   moment,
   Button,
   IUISchema,
   Modal
 } from '@ijstech/components';
+import { ScomCharts } from '@scom/scom-charts';
 import { IMixedChartConfig, formatNumber, groupByCategory, extractUniqueTimes, concatUnique, groupArrayByKey, formatNumberByFormat, getChartType, IMixedChartOptions, isNumeric } from './global/index';
 import { chartStyle, containerStyle, textStyle } from './index.css';
 import assets from './assets';
@@ -708,18 +708,18 @@ export default class ScomMixedChart extends Module implements ICustomWidget {
       series: _series
     };
     this.pnlChart.clearInnerHTML();
-    const chart = new LineChart(this.pnlChart, {
+    const chart = new ScomCharts(this.pnlChart, {
       data: _chartData,
       width: '100%',
       height: '100%'
     });
-    chart.data = _chartData;
+    // chart.data = _chartData;
     chart.drawChart();
   }
 
   private resizeChart() {
     if (this.pnlChart) {
-      (this.pnlChart.firstChild as LineChart)?.resize();
+      (this.pnlChart.firstChild as ScomCharts)?.resize();
     }
   }
 

@@ -1,4 +1,5 @@
 import { Module, customModule, Container } from '@ijstech/components';
+import { ModeType } from '@scom/scom-chart-data-source-setup';
 import ScomMixedChart from '@scom/scom-mixed-chart';
 
 @customModule
@@ -16,6 +17,8 @@ export default class Module1 extends Module {
             <i-scom-mixed-chart
                 margin={{ left: 'auto', right: 'auto' }}
                 data={{
+                    dataSource: 'Dune',
+                    mode: ModeType.LIVE,
                     apiEndpoint: "/dune/query/1333833",
                     title: 'Reserve Cumulative Value',
                     description: 'Radiant Capital Reserve Markets (Weekly % change)',
