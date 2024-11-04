@@ -69,8 +69,3 @@ export interface IMixedChartConfig {
   },
   mode: ModeType
 }
-
-export interface IFormatNumberOptions {
-  precision?: number;
-  roundingMode?: BigNumber.RoundingMode;
-}
