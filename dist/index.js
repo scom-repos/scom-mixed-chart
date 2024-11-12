@@ -2023,7 +2023,7 @@ define("@scom/scom-mixed-chart", ["require", "exports", "@ijstech/components", "
             };
         }
         getChartData() {
-            const { options } = this._data;
+            const { options } = this.model.getData();
             const { xColumn, yColumns, groupBy, globalSeriesType, seriesOptions, smooth, mergeDuplicateData, stacking, legend, showSymbol, showDataLabels, percentage, xAxis, leftYAxis, rightYAxis, padding = {} } = options;
             const { key, type, timeFormat } = xColumn;
             let _legend = {
