@@ -29,7 +29,6 @@ define("@scom/scom-mixed-chart/data.json.ts", ["require", "exports"], function (
     ///<amd-module name='@scom/scom-mixed-chart/data.json.ts'/> 
     exports.default = {
         defaultBuilderData: {
-            // apiEndpoint: "/dune/query/1333833",
             "mode": "Live",
             "dataSource": "Dune",
             "queryId": "1333833",
@@ -2022,8 +2021,9 @@ define("@scom/scom-mixed-chart", ["require", "exports", "@ijstech/components", "
                 embededSchema: (0, formSchema_1.getEmbedderSchema)(columns)
             };
         }
-        getChartData() {
-            const { options } = this.model.getData();
+        getChartData(options) {
+            if (!options)
+                return;
             const { xColumn, yColumns, groupBy, globalSeriesType, seriesOptions, smooth, mergeDuplicateData, stacking, legend, showSymbol, showDataLabels, percentage, xAxis, leftYAxis, rightYAxis, padding = {} } = options;
             const { key, type, timeFormat } = xColumn;
             let _legend = {

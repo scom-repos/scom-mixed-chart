@@ -1301,7 +1301,7 @@ declare module "@scom/scom-mixed-chart" {
                 };
             };
         };
-        getChartData(): {
+        getChartData(options?: IMixedChartOptions): {
             chartData: any;
             defaulBuildertData: IMixedChartConfig;
         };
