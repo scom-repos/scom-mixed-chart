@@ -19,7 +19,7 @@ export default class Module1 extends Module {
                 data={{
                     dataSource: 'Dune',
                     mode: ModeType.LIVE,
-                    apiEndpoint: "/dune/query/1333833",
+                    queryId: '1333833',
                     title: 'Reserve Cumulative Value',
                     description: 'Radiant Capital Reserve Markets (Weekly % change)',
                     options: {
